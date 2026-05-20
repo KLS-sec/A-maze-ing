@@ -33,6 +33,9 @@ class config_storage(BaseModel):
                 "OUTPUT_FILE must contain only letters, numbers, '_' and end with .txt"
             )
 
+        if self.seed < 1:  # ****check if strict > 0 or not
+            raise ValueError("SEED error, invalid seed, must be a positive int")
+
 
 #  tout mettre dans un try/except pour saisir les erreurs
 def get_config(filename: str) -> dict[str, bool | str | int | list | str]:
