@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, model_validator
 import re
 
-# **** ValidationError will be needed when calling this function in try - Except
+# **** ValidationError will be needed when calling this function in try - except
 
 
 class config_storage(BaseModel):
