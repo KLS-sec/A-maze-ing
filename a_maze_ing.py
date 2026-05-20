@@ -47,12 +47,33 @@ def get_config(filename: str) -> dict[str, bool | str | int | list]:
 
 
 def main() -> None:
+    logo = {"1000111",
+            "1000001",
+            "1110111",
+            "0010100",
+            "0010111"}
+    logo = logo
     a = get_config("config.txt")
     print(a)
-    b = ["o", "o", "o", "o", "o", "\n", "0", " ", " ", " ", "0", "\n", "o", "o", "o", "o", "o"]
-    for x in b:
-        print(x, end="")
-    print("")
+    width = a["WIDTH"]
+    height = a["HEIGHT"]
+    b = ["oooo", "0   ", "1111"]
+
+    # test printing a map
+    for x in range(height):
+        for y in range(width):
+            if y == 1 and x == 1:
+                print(b[2], end="")
+            else:
+                print(b[0], end="")
+        print("o")
+        for y in range(width):
+            print(b[1], end="")
+        print("0")
+    for y in range(width):
+        print(b[0], end="")
+    print("o")
+
 
 if __name__ == "__main__":
     main()
