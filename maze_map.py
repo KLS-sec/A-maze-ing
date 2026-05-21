@@ -3,9 +3,6 @@
 # here I CONSTRUC the cells and the map
 # modification and use will be somewhere else
 from dataclasses import dataclass
-from get_config import get_config
-# temporary import of get-config, will have to be called from a_maze_ing.py
-# and given the dict data as argument
 
 
 @dataclass
@@ -26,7 +23,7 @@ class Cell:
         self.total_wall = (self.north + self.east + self.south + self.west)
 
     upper_closed: str = "oooo"
-    upper_open: str = "0   "
+    upper_open: str = "o   "
     middle_closed: str = "0   "
     middle_open: str = "    "
 
@@ -42,6 +39,7 @@ def map_creator(height: int, width: int) -> list[list[Cell]]:
 
 
 def main() -> None:
+    from get_config import get_config
     a = get_config("config.txt")
     width = 8
     height = a["HEIGHT"]
