@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+
+#  call ce programme dans un try except pour attraper les erreurs
+
 from pydantic import BaseModel, Field, model_validator
 import re
 
-# **** ValidationError will be needed when calling this function in try - except
+# **** ValidationError needed when calling this function in try - except
 
 
 class config_storage(BaseModel):
@@ -30,11 +34,13 @@ class config_storage(BaseModel):
 
         if not re.fullmatch(r"[A-Za-z0-9_]+\.txt", self.OUTPUT_FILE):
             raise ValueError(
-                "OUTPUT_FILE must contain only letters, numbers, '_' and end with .txt"
+                "OUTPUT_FILE must contain only letters, numbers, '_'"
+                " and end with .txt"
             )
 
         if self.seed < 1:  # ****check if strict > 0 or not
-            raise ValueError("SEED error, invalid seed, must be a positive int")
+            raise ValueError("SEED error, invalid seed, must be a"
+                             " positive int")
 
 
 #  tout mettre dans un try/except pour saisir les erreurs
@@ -47,7 +53,6 @@ def get_config(filename: str) -> dict[str, bool | str | int | list | str]:
                 continue
             key, value = line.split("=")
             config[key] = value
-            print("Test")
 
             if key in {"WIDTH", "HEIGHT"}:
                 if value.isdigit():
@@ -59,13 +64,16 @@ def get_config(filename: str) -> dict[str, bool | str | int | list | str]:
                 if "," in value:
                     parts = value.split(",")
                     if len(parts) != 2:
-                        raise ValueError("Entry or Exit error, invalid coordinates.\nExemple: 5,8")
+                        raise ValueError("Entry or Exit error, invalid"
+                                         " coordinates.\nExemple: 5,8")
                     if parts[0].isdigit() and parts[1].isdigit():
                         config[key] = [int(parts[0]), int(parts[1])]
                     else:
-                        raise ValueError("Entry or Exit error, invalid coordinates.\nExemple: 5,8")
+                        raise ValueError("Entry or Exit error, invalid"
+                                         " coordinates.\nExemple: 5,8")
                 else:
-                    raise ValueError("Entry or Exit error, invalid coordinates.\nExemple: 5,8")
+                    raise ValueError("Entry or Exit error, invalid "
+                                     "coordinates.\nExemple: 5,8")
 
             if key == "OUTPUT_FILE":
                 # must be dealed with by pydantic (can detect "_")
@@ -79,7 +87,8 @@ def get_config(filename: str) -> dict[str, bool | str | int | list | str]:
                 elif value == "False":
                     config[key] = bool(False)
                 else:
-                    raise ValueError("Type error, what kind of maze do you want?")
+                    raise ValueError("Type error, what kind of maze do you"
+                                     " want?")
     return config
 
 
@@ -97,4 +106,5 @@ def main() -> None:
     print(width, height, entry, exit, output_file, perfect, seed)
 
 
-main()
+if __name__ == "__main__":
+    main()
