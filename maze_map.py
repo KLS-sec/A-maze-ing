@@ -11,12 +11,18 @@ class Cell:
     is_start: bool = 0
     is_exit: bool = 0
     is_way_out: bool = 0  # is it the perfect way start - exit
+    is_visited: bool = 0
 
     north: bool = 1
     east: bool = 1
     south: bool = 1
     west: bool = 1
 
+    # **** a modifier, faire des fonction get_hexa et get_total sinon ca ne se recalculera jamais
+    # **** ajouter des condition pour savoir quoi print, au lieu de juste print
+    # un element on call une fonction qui verifie ses propre condition et
+    # return la bonne chose a print
+    # exemple: print(wall()) => def wall if 42 = 1 return y, if exit = 1 return y etc
     def __post_init__(self):  # will initiate these value after initialisation
         self.hexa = (self.north * 1 + self.east * 2 + self.south * 4 +
                      self.west * 8)

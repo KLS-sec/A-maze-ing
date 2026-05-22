@@ -43,8 +43,11 @@ class config_storage(BaseModel):
                              " positive int")
 
 
-#  tout mettre dans un try/except pour saisir les erreurs
-def get_config(filename: str) -> dict[str, bool | str | int | list | str]:
+# quand il est call tout mettre dans un try/except pour saisir les erreurs
+# get all the data
+# **** lui faire tout mettre dans config storrage pour tester AVANT de return le dictionnaire
+# j ai carrement oublie d utiliser la classe
+def get_config(filename: str) -> dict[str, bool | str | int | list]:
     config = {}
     with open("config.txt", "r") as a:
         for line in a:

@@ -16,14 +16,20 @@ def fourtier(map: list[list[Cell]], height: int, width: int) -> list[list[Cell]]
     for x in range(5):
         for y in range(7):
             map[start_v + x][start_o + y].is_ft = int(logo[x][y])  # **** may cause a mypy error later
+            map[start_v + x][start_o + y].visited = int(logo[x][y])
 
 
-def atributor_start(map: list[list[Cell]], coordinates: list[int]) -> list[list[Cell]]:
-    map[coordinates[0]][coordinates[1]].is_start = True
+def atributor_start(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
+    map[xy[0]][xy[1]].is_start = True
 
 
-def atributor_exit(map: list[list[Cell]], coordinates: list[int]) -> list[list[Cell]]:
-    map[coordinates[0]][coordinates[1]].is_exit = True
+def atributor_exit(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
+    map[xy[0]][xy[1]].is_exit = True
+
+
+def ariane_string(map: list[list[Cell]], the_way: list[list[int]]):
+    for x, y in the_way:
+        map[y][x].is_way_out = 1
 
 
 def main() -> None:

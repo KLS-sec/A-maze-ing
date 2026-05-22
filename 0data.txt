@@ -2,8 +2,6 @@
 -Docstrings dans les fonctions et les classes, PEP 257
 
 
-
-
 Makefile:
 • install: Install project dependencies using pip, uv, pipx, or any other package
 manager of your choice.
@@ -16,3 +14,33 @@ keep the project environment clean.
 --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs
 --check-untyped-defs
 • lint-strict (optional): Execute the commands flake8 . and mypy . --strict
+
+
+bonus possible pour outstanding project:
+ajouter un status "empty" a une cellule pour qu elle reste fermée, ca permetra
+de faire des murs et des structures dans le labyrinthe
+-pour securiser qu il y a bien un chemin:
+    faire le systeme de recherche perfect, si il ne trouve pas il reviendra en arriere,
+    si il reviens jusqu a la case start 4 fois ca veut dire qu il ne trouve rien du tout
+
+
+
+securiser que entry, exit et 42 ne se chevauchent pas
+
+imperfect aurra un pan dedié a lui, d abord generation d un labyrinthe normal
+puis je call l imperfect pour aller peter des murs en plus
+ensuite un checker pour etre sur de pas avoir de 3*3 vide
+
+inversion x y de partout a verifier
+
+
+
+
+chemin allez retour:
+stoque chaque cases dans un list [list [x,y]]
+retour en arriere en revenant d un cran et en efacant le dernier
+si exit: considerera d office tt les cases autours commer fermées
+
+
+
+les return sont pas toujours coherent, a netoyer
