@@ -22,9 +22,12 @@ def wall_breaker(map: list[list[Cell]], x: int, y: int, wall: str):
         map[y][x].west = bool(0)
         map[y][x - 1].east = bool(0)
 
-# randomly select the wall to break
-# give it to wall breaker
-# return the new adress
+
+"""randomly select the wall to break
+give it to wall breaker
+return the new adress
+securise the exit problem"""
+# Turn the is_entry into an int to keep count of the roll backs and avoid unsolvable mazes?
 def way_maker(map: list[list[Cell]], data: dict[str, bool | str | int | list], x: int, y: int):
     if map[y][x].is_exit:
         return list(x, y)
@@ -40,6 +43,9 @@ def way_maker(map: list[list[Cell]], data: dict[str, bool | str | int | list], x
     if x != 0 and map[y][x - 1].is_ft != 1 and map[y][x - 1].is_visited != 1:
         directions.append("west")
 
+    if len(directions) == 0:
+        return list(x, y)
+
     # take the list of breakable walls, chose one, send it to the breaking
     chosen: str = random.choice(directions)
     wall_breaker(map, x, y, chosen)
@@ -53,7 +59,6 @@ def way_maker(map: list[list[Cell]], data: dict[str, bool | str | int | list], x
         return list(x, y - 1)
     if chosen == "west":
         return list(x - 1, y)
-    return list(x, y)
 
 # check if there are still any unopened cell
 # can return the total, seless now, made just in case
@@ -71,10 +76,12 @@ def map_checker(map: list[list[Cell]], data: dict[str, bool | str | int | list],
 # localisation keep track of the way
 # if the path is blocked it goes back one step
 # if it find exit and maze is perfect it convert the_way with ariane_string
+# **** faire en sort aue si il tombe sur exit il revienne en arriere
 def wanderer(map: list[list[Cell]], loc: list[int], data: dict[str, bool | str | int | list], x: int, y: int):
     path: list[list[int]] = [loc]
 
     # check if the map still need to be explored
+    # verifier que path[-1][0], path[-1][1] est corecte ****
     while map_checker(map, data, path[-1][0], path[-1][1]):
         # give the actual location, open the wall, receive the new location
         new_loc: list[int] = way_maker(map, data, path[-1][0], path[-1][1])
@@ -88,7 +95,7 @@ def wanderer(map: list[list[Cell]], loc: list[int], data: dict[str, bool | str |
         # create the perfect way **** only for perfect path
         if map[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
             the_way = path  # **** create a storage for the correct way?
-            ariane_string(map, the_way)
+            ariane_string(map, path)
 
 
 """

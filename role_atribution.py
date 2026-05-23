@@ -1,11 +1,30 @@
 #!/usr/bin/env python3
 
 from maze_map import map_creator, Cell
+import sys
+
+
+def atributor_start(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
+    """Create the entry"""
+    map[xy[0]][xy[1]].is_start = True
+
+
+def atributor_exit(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
+    """Create the exit and check overlapping with the entry"""
+    try:
+        map[xy[0]][xy[1]].is_exit = True
+        if map[xy[0]][xy[1]].is_start:
+            raise ValueError("Overlaping roles: Entry and Exit")
+    except ValueError as err:
+        print(err)
+        sys.exit()
 
 
 # define as 42 cell
-# reusable for other general modifications and detections
+# reusable for other general modifications and detections like the bonus
+# Last initialisator to pass, to avoid overlaping ****
 def fourtier(map: list[list[Cell]], height: int, width: int) -> list[list[Cell]]:
+    """create the 42 logo and check overlaping with entry and exit"""
     logo = ["1000111",
             "1000001",
             "1110111",
@@ -13,21 +32,22 @@ def fourtier(map: list[list[Cell]], height: int, width: int) -> list[list[Cell]]
             "0010111"]
     start_o = int((width - 7) / 2)
     start_v = int((height - 5) / 2)
-    for x in range(5):
-        for y in range(7):
-            map[start_v + x][start_o + y].is_ft = int(logo[x][y])  # **** may cause a mypy error later
-            map[start_v + x][start_o + y].visited = int(logo[x][y])
-
-
-def atributor_start(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
-    map[xy[0]][xy[1]].is_start = True
-
-
-def atributor_exit(map: list[list[Cell]], xy: list[int]) -> list[list[Cell]]:
-    map[xy[0]][xy[1]].is_exit = True
+    try:
+        for x in range(5):
+            for y in range(7):
+                if map[start_v + x][start_o + y].is_start:
+                    raise ValueError("Overlaping roles: Entry and 42")
+                if map[start_v + x][start_o + y].is_exit:
+                    raise ValueError("Overlaping roles: Exit and 42")
+                map[start_v + x][start_o + y].is_ft = int(logo[x][y])  # **** may cause a mypy error later
+                map[start_v + x][start_o + y].visited = int(logo[x][y])
+    except ValueError as err:
+        print(err)
+        sys.exit()
 
 
 def ariane_string(map: list[list[Cell]], the_way: list[list[int]]):
+    """Create the exit way"""
     for x, y in the_way:
         map[y][x].is_way_out = 1
 
