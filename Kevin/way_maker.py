@@ -3,138 +3,149 @@
 import random
 from maze_map import Cell
 from role_atribution import ariane_string
+import sys
 
 
-# toujours bien verifier qu il n y a pas inversion y - x, Y en premier
+def wall_breaker(maze: list[list[Cell]], x: int, y: int, wall: str) -> None:
+    """Break the selected wall between two adjacent cells.
 
-# break the selected wall in the selected cell, then break the adjacent one
-def wall_breaker(map: list[list[Cell]], x: int, y: int, wall: str):
+    Take the selected wall, open it, go to the adjacent cell,
+    open the corresponding wall, mark both as visited.
+    """
     if wall == "north":
-        map[y][x].north = bool(0)
-        map[y - 1][x].south = bool(0)
+        maze[y][x].north = bool(0)
+        maze[y][x].is_visited = True
+        maze[y - 1][x].south = bool(0)
+        maze[y - 1][x].is_visited = True
     if wall == "east":
-        map[y][x].east = bool(0)
-        map[y][x + 1].west = bool(0)
+        maze[y][x].east = bool(0)
+        maze[y][x].is_visited = True
+        maze[y][x + 1].west = bool(0)
+        maze[y][x + 1].is_visited = True
     if wall == "south":
-        map[y][x].south = bool(0)
-        map[y + 1][x].north = bool(0)
+        maze[y][x].south = bool(0)
+        maze[y][x].is_visited = True
+        maze[y + 1][x].north = bool(0)
+        maze[y + 1][x].is_visited = True
     if wall == "west":
-        map[y][x].west = bool(0)
-        map[y][x - 1].east = bool(0)
+        maze[y][x].west = bool(0)
+        maze[y][x].is_visited = True
+        maze[y][x - 1].east = bool(0)
+        maze[y][x - 1].is_visited = True
 
 
-"""randomly select the wall to break
-give it to wall breaker
-return the new adress
-securise the exit problem"""
-# Turn the is_entry into an int to keep count of the roll backs and avoid unsolvable mazes?
-def way_maker(map: list[list[Cell]], data: dict[str, bool | str | int | list], x: int, y: int):
-    if map[y][x].is_exit:
-        return list(x, y)
+def way_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list],
+              x: int, y: int) -> list[int]:
+    """Select and open the next path in the maze.
 
-    # list the breakables walls
+    Determine which walls can be broken, randomly select one,
+    open the corresponding passage, and return the coordinates
+    of the next cell to explore.
+
+    Raises:
+        ValueError: If the maze becomes unsolvable.
+    """
+    # List the breakables walls.
     directions = []
-    if y != 0 and map[y - 1][x].is_ft != 1 and map[y - 1][x].is_visited != 1:
+    if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1:
         directions.append("north")
-    if x != (data["WIDTH"] + 1) and map[y][x + 1].is_ft != 1 and map[y][x + 1].is_visited != 1:
+    if (x < (data["WIDTH"] - 1) and maze[y][x + 1].is_ft != 1 and
+            maze[y][x + 1].is_visited != 1):
         directions.append("east")
-    if y != (data["HEIGHT"] + 1) and map[y + 1][x].is_ft != 1 and map[y + 1][x].is_visited != 1:
+    if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1 and
+            maze[y + 1][x].is_visited != 1):
         directions.append("south")
-    if x != 0 and map[y][x - 1].is_ft != 1 and map[y][x - 1].is_visited != 1:
+    if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1:
         directions.append("west")
 
+    # Security for unsolvable maze.
+    try:
+        if len(directions) == 0 and maze[y][x].is_start:
+            raise ValueError("Error, unsolvable maze")
+    except ValueError as err:
+        print(err)
+        sys.exit()
+
+    # If no wall can be broken return the actual position.
     if len(directions) == 0:
-        return list(x, y)
+        return [x, y]
 
-    # take the list of breakable walls, chose one, send it to the breaking
+    # Take the list of breakable walls, chose one, send it to the breaking.
     chosen: str = random.choice(directions)
-    wall_breaker(map, x, y, chosen)
+    wall_breaker(maze, x, y, chosen)
 
-    # return the new adress
+    # Return the new adress.
     if chosen == "north":
-        return list(x, y + 1)
+        return [x, y - 1]
     if chosen == "east":
-        return list(x + 1, y)
+        return [x + 1, y]
     if chosen == "south":
-        return list(x, y - 1)
+        return [x, y + 1]
     if chosen == "west":
-        return list(x - 1, y)
+        return [x - 1, y]
 
-# check if there are still any unopened cell
-# can return the total, seless now, made just in case
-def map_checker(map: list[list[Cell]], data: dict[str, bool | str | int | list], x: int, y: int) -> int:
+
+def maze_checker(maze: list[list[Cell]],
+                 data: dict[str, bool | str | int | list],
+                 x: int, y: int) -> int:
+    """Check for any unopened cell, can return the total."""
     total = 0
     for x in range(data["HEIGHT"]):
         for y in range(data["WIDTH"]):
-            if map[y][x].is_visited == 0:
+            if maze[y][x].is_visited == 0:
                 total += 1
     return total
 
 
-# this agent take the starting point
-# call way_maker to explore, and find a new path
-# localisation keep track of the way
-# if the path is blocked it goes back one step
-# if it find exit and maze is perfect it convert the_way with ariane_string
-# **** faire en sort aue si il tombe sur exit il revienne en arriere
-def wanderer(map: list[list[Cell]], loc: list[int], data: dict[str, bool | str | int | list], x: int, y: int):
+# **** faire en sort que si il tombe sur exit il revienne en arriere
+def wanderer(maze: list[list[Cell]], loc: list[int],
+             data: dict[str, bool | str | int | list]) -> None:
+    """Explore the maze and create valid paths.
+
+    Move through the maze while opening walls between cells.
+    Store visited coordinates to allow rollback when reaching
+    dead ends. Mark the correct path when generating a perfect
+    maze.
+    """
     path: list[list[int]] = [loc]
 
-    # check if the map still need to be explored
-    # verifier que path[-1][0], path[-1][1] est corecte ****
-    while map_checker(map, data, path[-1][0], path[-1][1]):
-        # give the actual location, open the wall, receive the new location
-        new_loc: list[int] = way_maker(map, data, path[-1][0], path[-1][1])
+    while maze_checker(maze, data, path[-1][0], path[-1][1]):
+        try:
+            new_loc: list[int] = way_maker(maze, data,
+                                           path[-1][0], path[-1][1])
+        except ValueError as err:
+            print(err)
+            sys.exit()
 
-        # if wanderer did not move it is stuck, remove last position and restart
+        # Create the perfect way, only for perfect path.
+        if maze[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
+            ariane_string(maze, path)
+
+        # Roll back if exit is found.
+        if maze[new_loc[0]][new_loc[1]].is_exit:
+            path.pop()
+
+        # If wanderer did not move, it is stuck, so it remove the last.
+        # position and restart from the new last location on the list.
+
         if new_loc == path[-1]:
             path.pop()
         else:
             path.append(new_loc)
 
-        # create the perfect way **** only for perfect path
-        if map[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
-            the_way = path  # **** create a storage for the correct way?
-            ariane_string(map, path)
-
-
-"""
-@dataclass
-class Cell:
-    is_ft: bool = 0
-    is_start: bool = 0
-    is_exit: bool = 0
-    is_way_out: bool = 0  # is it the perfect way start - exit
-    visited: bool = 0
-
-    north: bool = 1
-    east: bool = 1
-    south: bool = 1
-    west: bool = 1
-
-    def __post_init__(self):  # will initiate these value after initialisation
-        self.hexa = (self.north * 1 + self.east * 2 + self.south * 4 +
-                     self.west * 8)
-        self.total_wall = (self.north + self.east + self.south + self.west)
-
-    upper_closed: str = "oooo"
-    upper_open: str = "o   "
-    middle_closed: str = "0   "
-    middle_open: str = "    "
-"""
-
 
 def main() -> None:
-    from maze_map import map_creator
+    from maze_map import maze_creator
     from get_config import get_config
     from role_atribution import atributor_exit, atributor_start, fourtier
 
     data = get_config("config.txt")
-    map = map_creator(data["HEIGHT"], data["WIDTH"])
+    maze = maze_creator(data["HEIGHT"], data["WIDTH"])
 
-    map = fourtier(map, data["HEIGHT"], data["WIDTH"])
-    map = atributor_start(map, data["ENTRY"])
-    map = atributor_exit(map, data["EXIT"])
+    fourtier(maze, data["HEIGHT"], data["WIDTH"])
+    atributor_start(maze, data["ENTRY"])
+    atributor_exit(maze, data["EXIT"])
+    print("END REACHED")
 
 
 if __name__ == "__main__":

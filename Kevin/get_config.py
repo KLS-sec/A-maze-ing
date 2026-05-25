@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
+# checked multiple times, should be good
 from pydantic import BaseModel, Field, model_validator, ValidationError
 import re
 import sys
 
 
 class config_storage(BaseModel):
-    """additionnal data Check for the config file"""
+    """Multiple check for the config file input."""
     width: int = Field(ge=2, le=50)
     height: int = Field(ge=2, le=18)
-    entry: list[int]  # **** check later that it does not overlap 42 symbol -> will be done in role atribution by the 42
-    exit: list[int]  # **** check later that it does not overlap 42 symbol
+    entry: list[int]
+    exit: list[int]
     output_file: str
     perfect: bool
 
@@ -21,12 +22,12 @@ class config_storage(BaseModel):
         if len(self.exit) != 2:
             raise ValueError("Exit error, invalid coordinates")
         if (
-           self.entry[0] < 0 or self.entry[0] > self.width or
-           self.entry[1] < 0 or self.entry[1] > self.height):
+           self.entry[0] < 0 or self.entry[0] >= self.width or
+           self.entry[1] < 0 or self.entry[1] >= self.height):
             raise ValueError("Entry error, invalid coordinates")
         if (
-           self.exit[0] < 0 or self.exit[0] > self.width or
-           self.exit[1] < 0 or self.exit[1] > self.height):
+           self.exit[0] < 0 or self.exit[0] >= self.width or
+           self.exit[1] < 0 or self.exit[1] >= self.height):
             raise ValueError("Exit error, invalid coordinates")
 
         if not re.fullmatch(r"[A-Za-z0-9_]+\.txt", self.output_file):
@@ -38,14 +39,17 @@ class config_storage(BaseModel):
 
 
 def get_config(filename: str) -> dict[str, bool | str | int | list]:
-    """retrieve the data from the indicated file
+    """Retrieve the data from the indicated file.
 
-    -Retrieve every data as try to convert them into the correct type
-    then send them in config_storage for further checking.
-    -Every errors are handled internally Then returned.
-    -Return a dict with all the data ready to use
+    Retrieve every data, try to convert them into the correct type and
+    send them in config_storage for further checking.
+
+    Handle errors internally, raise them then terminate the program.
+
+    Return dict with all the data ready to use
+
     Use:
-    config = get_config(filename)
+        config = get_config("filename.txt")
     """
     config = {}
     try:
@@ -63,7 +67,7 @@ def get_config(filename: str) -> dict[str, bool | str | int | list]:
                     else:
                         raise ValueError("Size error, invalid input")
 
-                if key in {"ENTRY", "EXIT"}:  # secure formating, number, type
+                if key in {"ENTRY", "EXIT"}:
                     if "," in value:
                         parts = value.split(",")
                         if len(parts) != 2:
