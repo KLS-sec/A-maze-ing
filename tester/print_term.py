@@ -8,9 +8,9 @@ init(autoreset=True) # reset de couleurs
 
 # combinaison de couleurs
 COLOR_SCHEMES = [
-    {"wall": Fore.WHITE,   "start": Fore.GREEN,  "exit": Fore.RED,    "ft": Fore.MAGENTA, "path": Fore.YELLOW}, # combinaison 1
-    {"wall": Fore.CYAN,    "start": Fore.YELLOW, "exit": Fore.BLUE,   "ft": Fore.GREEN,   "path": Fore.RED}, # combinaison 2
-    {"wall": Fore.BLUE,    "start": Fore.CYAN,   "exit": Fore.YELLOW, "ft": Fore.RED,     "path": Fore.GREEN}, # combinaison 3
+    {"wall": Fore.WHITE,   "start": Fore.BLUE,  "exit": Fore.RED,    "ft": Fore.MAGENTA, "path": Fore.YELLOW}, # combinaison 1
+    {"wall": Fore.CYAN,    "start": Fore.YELLOW, "exit": Fore.MAGENTA,   "ft": Fore.GREEN,   "path": Fore.RED}, # combinaison 2
+    {"wall": Fore.BLUE,    "start": Fore.GREEN,   "exit": Fore.YELLOW, "ft": Fore.RED,     "path": Fore.MAGENTA}, # combinaison 3
 ]
 
 
@@ -26,10 +26,10 @@ def rotate_colors(index: int) -> int:
 
 # colorie le maze
 def color_map(maze: list[list[Cell]], height: int, width: int, 
-              color_ind: int, show_path: bool = False) -> None:
+              color_ind: int, show_path: bool) -> None:
     colors = get_colors(color_ind) # une combinaison de couleurs
     # colorie le mur (haut ou gauche)
-    def _colorize(cell: Cell, neighbor: Cell | None = None) -> str:
+    def _colorize(cell: Cell, neighbor: Cell | None) -> str:
         if cell.is_ft or (neighbor and neighbor.is_ft):
             return colors["ft"]
         if cell.is_start or (neighbor and neighbor.is_start):
@@ -129,7 +129,7 @@ def gen_maze() -> list[list[Cell]]:
 
 # interface ancien
 def ui(height: int, width: int) -> None:
-    show_path = False
+    show_path = True
     color_ind = 0
     mazegen = gen_maze()
     render(mazegen, height, width, color_ind, show_path)

@@ -118,17 +118,17 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
             sys.exit()
 
         # Create the perfect way, only for perfect path.
-        if maze[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
+        if maze[new_loc[1]][new_loc[0]].is_exit and data["PERFECT"]:
             ariane_string(maze, path)
 
         # Roll back if exit is found.
-        if maze[new_loc[0]][new_loc[1]].is_exit:
+        if maze[new_loc[1]][new_loc[0]].is_exit:
             path.pop()
 
         # If wanderer did not move, it is stuck, so it remove the last.
         # position and restart from the new last location on the list.
 
-        if not maze[new_loc[0]][new_loc[1]].is_exit:
+        if not maze[new_loc[1]][new_loc[0]].is_exit:
             if new_loc == path[-1]:
                 path.pop()
             else:
