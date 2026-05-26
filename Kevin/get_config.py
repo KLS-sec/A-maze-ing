@@ -9,7 +9,7 @@ import sys
 class config_storage(BaseModel):
     """Multiple check for the config file input."""
     width: int = Field(ge=2, le=50)
-    height: int = Field(ge=2, le=18)
+    height: int = Field(ge=2, le=20)
     entry: list[int]
     exit: list[int]
     output_file: str

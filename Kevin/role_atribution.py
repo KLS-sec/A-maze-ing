@@ -6,16 +6,16 @@ import sys
 # checked, should be complete
 
 
-def atributor_start(maze: list[list[Cell]], xy: list[int]):
+def atributor_start(maze: list[list[Cell]], start: list[int]) -> None:
     """Create the entry"""
-    maze[(xy[0])][(xy[1])].is_start = True
+    maze[(start[0])][(start[1])].is_start = True
 
 
-def atributor_exit(maze: list[list[Cell]], xy: list[int]):
+def atributor_exit(maze: list[list[Cell]], exit: list[int]) -> None:
     """Create the exit and check overlapping with the entry"""
     try:
-        maze[xy[0]][xy[1]].is_exit = True
-        if maze[xy[0]][xy[1]].is_start:
+        maze[exit[0]][exit[1]].is_exit = True
+        if maze[exit[0]][exit[1]].is_start:
             raise ValueError("Overlaping roles: Entry and Exit")
     except ValueError as err:
         print(err)
@@ -46,7 +46,7 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
                 if maze[start_v + x][start_o + y].is_exit:
                     raise ValueError("Overlaping roles: Exit and 42")
                 maze[start_v + x][start_o + y].is_ft = int(logo[x][y])  # **** may cause a mypy error later
-                maze[start_v + x][start_o + y].visited = int(logo[x][y])
+                maze[start_v + x][start_o + y].is_visited = int(logo[x][y])
     except ValueError as err:
         print(err)
         sys.exit()
@@ -59,10 +59,6 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
     is_way_out"""
     for x, y in the_way:
         maze[y][x].is_way_out = 1
-    """
-    if maze[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
-        ariane_string(maze, path)
-    """
 
 
 def main() -> None:

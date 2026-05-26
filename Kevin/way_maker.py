@@ -89,12 +89,12 @@ def maze_checker(maze: list[list[Cell]],
                  data: dict[str, bool | str | int | list],
                  x: int, y: int) -> int:
     """Check for any unopened cell, can return the total."""
-    total = 0
+    total: int = 0
     for x in range(data["HEIGHT"]):
         for y in range(data["WIDTH"]):
             if maze[y][x].is_visited == 0:
                 total += 1
-    return total
+    return int(total)
 
 
 # **** faire en sort que si il tombe sur exit il revienne en arriere
@@ -128,10 +128,11 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
         # If wanderer did not move, it is stuck, so it remove the last.
         # position and restart from the new last location on the list.
 
-        if new_loc == path[-1]:
-            path.pop()
-        else:
-            path.append(new_loc)
+        if not maze[new_loc[0]][new_loc[1]].is_exit:
+            if new_loc == path[-1]:
+                path.pop()
+            else:
+                path.append(new_loc)
 
 
 def main() -> None:

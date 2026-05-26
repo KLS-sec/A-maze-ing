@@ -1,36 +1,76 @@
 #!/usr/bin/env python3
 
 from get_config import get_config
+from maze_map import maze_creator
+import role_atribution
 
 
 def main() -> None:
-    logo = {"1000111",
-            "1000001",
-            "1110111",
-            "0010100",
-            "0010111"}
-    logo = logo
-    a = get_config("config.txt")
-    print(a)
-    width = a["WIDTH"]
-    height = a["HEIGHT"]
-    b = ["oooo", "0   ", "1111"]
+    config = get_config("config.txt")
+    print(config, "\n")
 
-    # test printing a map
+    maze = maze_creator(config["HEIGHT"], config["WIDTH"])
+    print("Maze size:", len(maze), "time", len(maze[0]), "\n")
+
+    role_atribution.atributor_start(maze, config["ENTRY"])
+    role_atribution.atributor_exit(maze, config["EXIT"])
+    role_atribution.fourtier(maze, config["HEIGHT"], config["WIDTH"])
+    print("Atribution done\n")
+    # width = config["WIDTH"]
+    # height = config["HEIGHT"]
+
+    for x in range(config["HEIGHT"]):
+        for y in range(config["WIDTH"]):
+            if maze[x][y].is_ft == 1:
+                print("XXXX", sep="", end="")
+            else:
+                print(maze[x][y].upper_closed, sep="", end="")
+        print("o\n", end="")
+
+        for y in range(config["WIDTH"]):
+            if maze[x][y].is_ft == 1:
+                print("0000", sep="", end="")
+            elif maze[x][y].is_start == 1:
+                print("0SSS", sep="", end="")
+            elif maze[x][y].is_exit == 1:
+                print("0EEE", sep="", end="")
+            else:
+                print(maze[x][y].left_closed, sep="", end="")
+        print("0\n", end="")
+
+    print("oooo" * config["WIDTH"], "o\n", sep="", end="")
+
+    print("Hexa =", maze[0][0].get_hexa())
+    print("Total wall =", maze[0][0].get_wallnumber())
+
+
+"""
+def main() -> None:
+
     for x in range(height):
         for y in range(width):
-            if y == 1 and x == 1:
-                print(b[2], end="")
+            if maze[x][y].is_ft == 1:
+                print("XXXX", sep="", end="")
             else:
-                print(b[0], end="")
-        print("o")
-        for y in range(width):
-            print(b[1], end="")
-        print("0")
-    for y in range(width):
-        print(b[0], end="")
-    print("o")
+                print(maze[x][y].upper_closed, sep="", end="")
+        print("o\n", end="")
 
+        for y in range(width):
+            if maze[x][y].is_ft == 1:
+                print("0000", sep="", end="")
+            elif maze[x][y].is_start == 1:
+                print("0SSS", sep="", end="")
+            elif maze[x][y].is_exit == 1:
+                print("0EEE", sep="", end="")
+            else:
+                print(maze[x][y].left_closed, sep="", end="")
+        print("0\n", end="")
+
+    print("oooo" * width, "o\n", sep="", end="")
+
+    print("Hexa =", maze[0][0].get_hexa())
+    print("Total wall =", maze[0][0].get_wallnumber())
+"""
 
 if __name__ == "__main__":
     main()

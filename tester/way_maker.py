@@ -57,12 +57,11 @@ def way_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list],
         directions.append("south")
     if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1:
         directions.append("west")
+
     # Security for unsolvable maze.
-    if maze[y][x].is_start:
-        print("Return to start point 0000000000000000000000000000000000")
     try:
         if len(directions) == 0 and maze[y][x].is_start:
-            raise ValueError("Error, unsolvable maze", len(directions))
+            raise ValueError("Error, unsolvable maze")
     except ValueError as err:
         print(err)
         sys.exit()
@@ -110,9 +109,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
     """
     path: list[list[int]] = [loc]
 
-    while maze_checker(maze, data, path[-1][0], path[-1][1]) >= 1:
-        # print("list =", path)  # ****
-        result = maze_checker(maze, data, path[-1][0], path[-1][1])
+    while maze_checker(maze, data, path[-1][0], path[-1][1]):
         try:
             new_loc: list[int] = way_maker(maze, data,
                                            path[-1][0], path[-1][1])
@@ -127,7 +124,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
         # Roll back if exit is found.
         if maze[new_loc[0]][new_loc[1]].is_exit:
             path.pop()
-        # print("len path =", len(path))  # ****
+
         # If wanderer did not move, it is stuck, so it remove the last.
         # position and restart from the new last location on the list.
 
