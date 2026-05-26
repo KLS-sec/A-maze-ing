@@ -46,7 +46,7 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
                 if maze[start_v + x][start_o + y].is_exit:
                     raise ValueError("Overlaping roles: Exit and 42")
                 maze[start_v + x][start_o + y].is_ft = int(logo[x][y])  # **** may cause a mypy error later
-                maze[start_v + x][start_o + y].visited = int(logo[x][y])
+                maze[start_v + x][start_o + y].is_visited = int(logo[x][y])
     except ValueError as err:
         print(err)
         sys.exit()
@@ -57,7 +57,10 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
 
     Take the list of coordinates leading to the exit and change the atribute
     is_way_out"""
-    for x, y in the_way:
+    print("a=", len(the_way))
+    for i in range(len(the_way)):
+        x = the_way[i][0]
+        y = the_way[i][1]
         maze[y][x].is_way_out = 1
     """
     if maze[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
