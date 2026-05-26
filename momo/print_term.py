@@ -119,7 +119,7 @@ def ui(maze: list[list[Cell]], height: int, width: int) -> None:
            "4. Quit")
     print(txt)
     try:
-        param = input("Choice? (1-4): ")
+        param = input("Choice? (1-4): ").strip()
         while param != "4":
             if param == "1":
                 print("11111111111111111111111111111111")
