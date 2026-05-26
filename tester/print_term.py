@@ -1,5 +1,5 @@
 from colorama import Fore, Style, init
-# from enum import Enum
+import os
 from maze_map import Cell
 
 
@@ -62,56 +62,77 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
 def render(maze: list[list[Cell]], height: int, width: int,
            color_ind: int, show_path: bool) -> None:
     if maze:
+        os.system("cls" if os.name == "nt" else "clear")
         color_map(maze, height, width, color_ind, show_path)
 
 
 # interface nouveau
-def ui2(maze: list[list[Cell]], height: int, width: int) -> None:
-    show_path = False
-    color_ind = 0
+# def ui2(height: int, width: int) -> None:
+#     show_path = False
+#     color_ind = 0
+#     mazegen = gen_maze()
+#     render(mazegen, height, width, color_ind, show_path)
+#     MENU = (
+#         "\n=== a-maze-ing ===\n"
+#         "1. Re-generate a new maze\n"
+#         "2. Show/Hide path from entry to exit\n"
+#         "3. Rotate maze colors\n"
+#         "4. Quit\n"
+#     )
+#     ACTIONS = {
+#         "1": "regenerate",
+#         "2": "toggle_path",
+#         "3": "rotate",
+#         "4": "quit",
+#     }
+#     print(MENU)
+#     try:
+#         while True:
+#             param = input("Choice? (1-4): ").strip()
+#             action = ACTIONS.get(param)
+#             if action == "quit":
+#                 print("Quitting...")
+#                 break
+#             elif action == "regenerate":
+#                 mazegen2 = gen_maze()
+#                 render(mazegen2, height, width, color_ind, show_path)
+#             elif action == "toggle_path":
+#                 show_path = not show_path
+#                 render(mazegen, height, width, color_ind, show_path)
+#             elif action == "rotate":
+#                 color_ind = rotate_colors(color_ind)
+#                 render(mazegen, height, width, color_ind, show_path)
+#             else:
+#                 print("Invalid input, please enter 1 to 4.")
+#             print(MENU)
+#     except KeyboardInterrupt:
+#         print("\nKeyboard interrupt, Quitting...")
+#         exit()
 
-    MENU = (
-        "\n=== a-maze-ing ===\n"
-        "1. Re-generate a new maze\n"
-        "2. Show/Hide path from entry to exit\n"
-        "3. Rotate maze colors\n"
-        "4. Quit\n"
-    )
-    ACTIONS = {
-        "1": "regenerate",
-        "2": "toggle_path",
-        "3": "rotate",
-        "4": "quit",
-    }
-    print(MENU)
-    try:
-        while True:
-            param = input("Choice? (1-4): ").strip()
-            action = ACTIONS.get(param)
-            if action == "quit":
-                print("Quitting...")
-                break
-            elif action == "regenerate":
-                render(maze, height, width, color_ind, show_path)
-            elif action == "toggle_path":
-                show_path = not show_path
-                render(maze, height, width, color_ind, show_path)
-            elif action == "rotate":
-                color_ind = rotate_colors(color_ind)
-                render(maze, height, width, color_ind, show_path)
-            else:
-                print("Invalid input, please enter 1 to 4.")
-            print(MENU)
-    except KeyboardInterrupt:
-        print("\nKeyboard interrupt, Quitting...")
-        exit()
+
+def gen_maze() -> list[list[Cell]]:
+    from maze_map import maze_creator
+    from role_atribution import atributor_start, atributor_exit, fourtier
+    from way_maker import wanderer
+    from get_config import get_config
+
+    data = get_config("config.txt")
+    height = data["HEIGHT"]
+    width = data["WIDTH"]
+    maze = maze_creator(height, width)
+    fourtier(maze, height, width)
+    atributor_start(maze, data["ENTRY"])
+    atributor_exit(maze, data["EXIT"])
+    wanderer(maze, data["ENTRY"], data)
+    return maze
 
 
 # interface ancien
-def ui(maze: list[list[Cell]], height: int, width: int) -> None:
+def ui(height: int, width: int) -> None:
     show_path = False
     color_ind = 0
-
+    mazegen = gen_maze()
+    render(mazegen, height, width, color_ind, show_path)
     txt = ("=== a-maze-ing ===\n"
            "1. Re-generate a new maze\n"
            "2. Show/Hide path from entry to exit\n"
@@ -122,41 +143,27 @@ def ui(maze: list[list[Cell]], height: int, width: int) -> None:
         param = input("Choice? (1-4): ").strip()
         while param != "4":
             if param == "1":
-                print("11111111111111111111111111111111")
-                render(maze, height, width, color_ind, show_path)
+                mazegen = gen_maze()
+                render(mazegen, height, width, color_ind, show_path)
             elif param == "2":
                 show_path = not show_path
-                print("22222222222222222222222222222222")
-                render(maze, height, width, color_ind, show_path)
+                render(mazegen, height, width, color_ind, show_path)
             elif param == "3":
-                print("33333333333333333333333333333333")
                 color_ind = rotate_colors(color_ind)
-                render(maze, height, width, color_ind, show_path)
+                render(mazegen, height, width, color_ind, show_path)
             else:
                 print("Invalid input, Quitting...")
                 return
             print(txt)
-            param = input("Choice? (1-4): ")
+            param = input("Choice? (1-4): ").strip()
     except KeyboardInterrupt:
         print("\nKeyboard interrupt, Quitting...")
-        exit()
 
 
-# verifer si fait correctement
 if __name__ == "__main__":
     from get_config import get_config
-    from maze_map import maze_creator
-    from role_atribution import atributor_start, atributor_exit, fourtier
-    from way_maker import wanderer
 
     data = get_config("config.txt")
     height = data["HEIGHT"]
     width = data["WIDTH"]
-
-    maze = maze_creator(height, width)
-    fourtier(maze, height, width)
-    atributor_start(maze, data["ENTRY"])
-    atributor_exit(maze, data["EXIT"])
-    wanderer(maze, data["ENTRY"], data)
-
-    ui(maze, height, width)
+    ui(height, width)
