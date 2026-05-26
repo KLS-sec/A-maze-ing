@@ -125,7 +125,6 @@ def get_config(filename: str) -> dict[str, bool | str | int | list]:
     return config
 
 
-# **** main de test, ne pas garder a la fin
 def main() -> None:
     print("")
     a = get_config("config.txt")

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 
-# Mostly done, the last 2 bonuses
+# Mostly done, rest the last 2 bonuses
 # **** add the filled and the empty propriety
 @dataclass
 class Cell:
@@ -27,16 +27,16 @@ class Cell:
     west: bool = 1
 
     def get_hexa(self) -> int:
-        """Return the hexadecimal value."""
+        # Return the hexadecimal value.
         return (self.north * 1 + self.east * 2 + self.south * 4 +
                 self.west * 8)
 
     def get_wallnumber(self) -> int:
-        """Return the number of closed wall for the imperfect maze."""
+        # Return the number of closed wall for the imperfect maze.
         return (self.north + self.east + self.south + self.west)
 
     def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int) -> str:
-        """Return the upper wall to print depending on the cell location."""
+        # Return the upper wall to print depending on the cell location.
         if self.is_ft or (maze[y - 1][x].is_ft and y != 0):
             return self.upper_ft
         elif maze[y - 1][x - 1].is_ft or maze[y][x - 1].is_ft:
@@ -60,7 +60,7 @@ class Cell:
             return self.upper_open
 
     def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int) -> str:
-        """Return the left wall to print depending on the cell location."""
+        # Return the left wall to print depending on the cell location.
         if self.is_ft:
             return self.left_ft
         elif maze[y][x - 1].is_ft:
@@ -81,9 +81,7 @@ class Cell:
         else:
             return self.left_open
 
-    """The list of different appearences for the walls depending on the cell
-    state.
-    """
+    # The different appearences for the walls depending on the cell state.
     # Normal
     upper_closed: str = "oooo"
     upper_open: str = "0   "
