@@ -126,7 +126,7 @@ def main() -> None:
     height = a["HEIGHT"]
 
     maze = maze_creator(height, width)
-    maze[9][9].is_start = True
+    maze[9][12].is_start = True
     maze[1][3].is_exit = True
     fourtier(maze, height, width)
 

@@ -3,6 +3,7 @@
 from get_config import get_config
 from maze_map import maze_creator
 import role_atribution
+import way_maker
 
 
 def main() -> None:
@@ -19,23 +20,20 @@ def main() -> None:
     # width = config["WIDTH"]
     # height = config["HEIGHT"]
 
-    for x in range(config["HEIGHT"]):
-        for y in range(config["WIDTH"]):
-            if maze[x][y].is_ft == 1:
-                print("XXXX", sep="", end="")
-            else:
-                print(maze[x][y].upper_closed, sep="", end="")
-        print("o\n", end="")
+    way_maker.wanderer(maze, config["ENTRY"], config)
 
-        for y in range(config["WIDTH"]):
-            if maze[x][y].is_ft == 1:
-                print("0000", sep="", end="")
-            elif maze[x][y].is_start == 1:
-                print("0SSS", sep="", end="")
-            elif maze[x][y].is_exit == 1:
-                print("0EEE", sep="", end="")
-            else:
-                print(maze[x][y].left_closed, sep="", end="")
+    for y in range(config["HEIGHT"]):
+        for x in range(config["WIDTH"]):
+            """if maze[y][x].is_way_out and not maze[y][x].is_start and not maze[y][x].is_exit:
+                print("oooo", sep="", end="")
+            else:"""
+            print(maze[y][x].get_upper_wall(maze, x, y), sep="", end="")
+        print("o\n", end="")
+        for x in range(config["WIDTH"]):
+            """if maze[y][x].is_way_out and not maze[y][x].is_start and not maze[y][x].is_exit:
+                print("0...", sep="", end="")
+            else:"""
+            print(maze[y][x].get_left_wall(maze, x, y), sep="", end="")
         print("0\n", end="")
 
     print("oooo" * config["WIDTH"], "o\n", sep="", end="")
