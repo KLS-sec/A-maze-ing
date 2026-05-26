@@ -30,7 +30,7 @@ def generate_output_file(
     height: int,
     seed: int | None,
     perfect: bool,
-    solution_path: list[tuple[int, int]] # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)] (mais normalement ca doit ressembler a ca le chemin)
+    solution_path: list[tuple[int, int]] # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
     ) -> None:
 
     with open(filename, "w") as f:
