@@ -25,10 +25,10 @@ class Cell:
     center: str = "   "
 
     # Forty-two
-    upper_is_ft: str = " █ "
-    upper_left_is_ft: str = "■"
+    upper_is_ft: str = "███"
+    upper_left_is_ft: str = "█"
     left_is_ft: str = "█"
-    center_is_ft: str = " █ "
+    center_is_ft: str = "███"
 
     # Start
     center_is_start: str = "███"

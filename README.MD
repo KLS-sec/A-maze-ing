@@ -64,7 +64,6 @@ optional parameter:
 	- Parsing
 	- Debugging
 	- Docstrings
-	- Makefile
 	- README
 
 - ### mmakhmae :
