@@ -15,6 +15,7 @@ debug:
 
 clean:
 	rm -rf __pycache__
+	rm -rf .mypy_cache
 
 lint:
 	python3 -m flake8 .
