@@ -15,6 +15,32 @@ class Cell:
     Potential amelioration:
         Can be enhenced by automatising the implementation of new properties.
     """
+    # The different appearences for the walls depending on the cell state.
+    # Normal
+    upper_left: str = "o"
+    upper_closed: str = "ooo"
+    upper_open: str = "   "
+    left_closed: str = "0"
+    left_open: str = " "
+    center: str = "   "
+
+    # Forty-two
+    upper_is_ft: str = "444"
+    upper_left_is_ft: str = "4"
+    left_is_ft: str = "4"
+    center_is_ft: str = "444"
+
+    # Start
+    center_is_start: str = "sss"
+
+    # Exit
+    center_is_exit: str = "eee"
+
+    # Way out
+    upper_is_way_out: str = " w "
+    left_is_way_out: str = "w"
+    center_is_way_out: str = " w "
+
     is_ft: bool = 0
     is_start: bool = 0
     is_exit: bool = 0
@@ -35,8 +61,35 @@ class Cell:
         # Return the number of closed wall for the imperfect maze.
         return (self.north + self.east + self.south + self.west)
 
-    def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int) -> str:
+    def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int) -> list[str]:
         # Return the upper wall to print depending on the cell location.
+        upper_wall = []
+
+        # upper-left
+        # ft
+        if (self.is_ft or ((maze[y - 1][x].is_ft or maze[y - 1][x - 1].is_ft)
+                           and y != 0) or (maze[y][x - 1].is_ft and x != 0)):
+            upper_wall.append(self.upper_left_is_ft)
+        # normal
+        else:
+            upper_wall.append(self.upper_left)
+
+        # upper middle
+        # ft
+        if (self.is_ft or (maze[y - 1][x].is_ft and y != 0)):
+            upper_wall.append(self.upper_is_ft)
+        # closed
+        elif self.north == 1:
+            upper_wall.append(self.upper_closed)
+        elif self.is_way_out == 1 and maze[y - 1][x].is_way_out == 1:  # **** add the conditionnal to trigger the coloration
+            upper_wall.append(self.upper_is_way_out)
+        # normal
+        else:
+            upper_wall.append(self.upper_open)
+
+        return upper_wall
+
+        """
         if self.is_ft or (maze[y - 1][x].is_ft and y != 0):
             return self.upper_ft
         elif maze[y - 1][x - 1].is_ft or maze[y][x - 1].is_ft:
@@ -57,54 +110,35 @@ class Cell:
         elif self.north:
             return self.upper_closed
         else:
-            return self.upper_open
+            return self.upper_open"""
 
     def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int) -> str:
         # Return the left wall to print depending on the cell location.
-        if self.is_ft:
-            return self.left_ft
-        elif maze[y][x - 1].is_ft:
-            return self.left_is_ft
-
-        if self.is_start:
-            return self.left_start
-        elif maze[y][x - 1].is_start and x != 0:
-            return self.left_is_start
-
-        if self.is_exit:
-            return self.left_exit
-        elif maze[y][x - 1].is_exit and x != 0:
-            return self.left_is_exit
-
-        elif self.west:
-            return self.left_closed
+        left_center = []
+        # left
+        if self.is_ft or maze[y][x - 1].is_ft:
+            left_center.append(self.left_is_ft)
+        elif self.west == 1:
+            left_center.append(self.left_closed)
+        elif self.is_way_out == 1 and (maze[y][x - 1].is_way_out == 1 or maze[y][x - 1].is_exit == 1 or maze[y][x - 1].is_start == 1):
+            left_center.append(self.left_is_way_out)
         else:
-            return self.left_open
+            left_center.append(self.left_open)
 
-    # The different appearences for the walls depending on the cell state.
-    # Normal
-    upper_closed: str = "oooo"
-    upper_open: str = "0   "
-    left_closed: str = "0   "
-    left_open: str = "    "
+        # center
+        if self.is_ft:
+            left_center.append(self.center_is_ft)
+        elif self.is_start:
+            left_center.append(self.center_is_start)
+        elif self.is_exit:
+            left_center.append(self.center_is_exit)
+        elif self.is_way_out:
+            left_center.append(self.center_is_way_out)
+        # elif self.is_way_out:  # **** can be conditionned
+        else:
+            left_center.append(self.center)
 
-    # Forty-two
-    upper_ft: str = "4444"
-    upper_left_is_ft: str = "4ooo"
-    left_ft: str = "4444"
-    left_is_ft: str = "4   "
-
-    # Start
-    upper_start: str = "ssss"
-    upper_left_is_start: str = "sooo"
-    left_start: str = "ssss"
-    left_is_start: str = "s   "
-
-    # Exit
-    upper_exit: str = "eeee"
-    upper_left_is_exit: str = "eooo"
-    left_exit: str = "eeee"
-    left_is_exit: str = "e   "
+        return left_center
 
 
 def maze_creator(height: int, width: int) -> list[list[Cell]]:
@@ -126,7 +160,7 @@ def main() -> None:
     height = a["HEIGHT"]
 
     maze = maze_creator(height, width)
-    maze[9][14].is_start = True
+    maze[9][12].is_start = True
     maze[1][3].is_exit = True
     fourtier(maze, height, width)
 
