@@ -27,7 +27,9 @@ def main() -> None:
     #        print(maze[y][x].get_hexa(), sep="", end=" ")
     #    print("")
 
-    imperfect_maze.imperfect_maker(maze, config)
+    if not config["PERFECT"]:
+        imperfect_maze.imperfect_maker(maze, config)
+        imperfect_maze.imperfect_solver(maze, config)
 
     for y in range(config["HEIGHT"]):
         for x in range(config["WIDTH"]):
