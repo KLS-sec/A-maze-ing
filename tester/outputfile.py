@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from maze_map import Cell
 
+
 # conversion du path en N-S-E-W
 def coords_to_direction(path: List[Tuple[int, int]]) -> str:
     directions = []
@@ -23,11 +24,11 @@ def coords_to_direction(path: List[Tuple[int, int]]) -> str:
 
 def generate_output_file(
     filename: str,
-    maze: list[list[Cell]], # la map de maze_map
+    maze: list[list[Cell]],  # la map de maze_map
     entry: tuple[int, int],
     exit: tuple[int, int],
-    solution_path: list[tuple[int, int]] # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
-    ) -> None:
+    solution_path: list[tuple[int, int]]  # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
+) -> None:
 
     with open(filename, "w") as f:
         f.write("=== A-Maze-ing Output File ===\n\n")
@@ -35,7 +36,7 @@ def generate_output_file(
         f.write("[MAZE]\n")
         for row in maze:
             # conversion en hexa par cellule pour chaque ligne ("X" = maj "x" = min)
-            line = "".join(format(cell.hexa, "X") for cell in row)
+            line = "".join(format(Cell.get_hexa, "X") for cell in row)
             f.write(line + "\n")
 
         f.write("[ENTRY]\n")

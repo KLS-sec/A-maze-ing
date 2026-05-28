@@ -3,14 +3,17 @@ import os
 from maze_map import Cell
 
 
-init(autoreset=True) # reset de couleurs
+init(autoreset=True)  # reset de couleurs
 
 
 # combinaison de couleurs
 COLOR_SCHEMES = [
-    {"wall": Fore.WHITE,   "start": Fore.BLUE,  "exit": Fore.RED,    "ft": Fore.MAGENTA, "path": Fore.YELLOW}, # combinaison 1
-    {"wall": Fore.CYAN,    "start": Fore.YELLOW, "exit": Fore.MAGENTA,   "ft": Fore.GREEN,   "path": Fore.RED}, # combinaison 2
-    {"wall": Fore.BLUE,    "start": Fore.GREEN,   "exit": Fore.YELLOW, "ft": Fore.RED,     "path": Fore.MAGENTA}, # combinaison 3
+    {"wall": Fore.WHITE, "start": Fore.BLUE, "exit": Fore.RED,
+     "ft": Fore.MAGENTA, "path": Fore.YELLOW},  # combinaison 1
+    {"wall": Fore.CYAN,  "start": Fore.YELLOW, "exit": Fore.MAGENTA,
+     "ft": Fore.GREEN, "path": Fore.RED},  # combinaison 2
+    {"wall": Fore.BLUE,  "start": Fore.GREEN,  "exit": Fore.YELLOW,
+     "ft": Fore.RED,     "path": Fore.MAGENTA},  # combinaison 3
 ]
 
 
@@ -25,37 +28,47 @@ def rotate_colors(index: int) -> int:
 
 
 # colorie le maze
-def color_map(maze: list[list[Cell]], height: int, width: int, 
+def color_map(maze: list[list[Cell]], height: int, width: int,
               color_ind: int, show_path: bool) -> None:
-    colors = get_colors(color_ind) # une combinaison de couleurs
+    colors = get_colors(color_ind)  # une combinaison de couleurs
     # colorie le mur (haut ou gauche)
-    def _colorize(cell: Cell, neighbor: Cell | None) -> str:
-        if cell.is_ft or (neighbor and neighbor.is_ft):
+
+    def _colorize(key: str) -> str:
+        if (key == "upper_is_ft" or
+            key == "upper_left_is_ft" or
+            key == "left_is_ft" or
+                key == "center_is_ft"):
             return colors["ft"]
-        if cell.is_start or (neighbor and neighbor.is_start):
+        if key == "center_is_start":
             return colors["start"]
-        if cell.is_exit or (neighbor and neighbor.is_exit):
+        if key == "center_is_exit":
             return colors["exit"]
-        if show_path and (cell.is_way_out or (neighbor and neighbor.is_way_out)):
-            return colors["path"]
         return colors["wall"]
 
     for y in range(height):
         # boucle sur les murs du haut
         for x in range(width):
             cell = maze[y][x]
-            above = maze[y - 1][x] if y > 0 else None
-            print(_colorize(cell, above) + cell.get_upper_wall(maze, x, y) + Style.RESET_ALL, end="")
-        print(colors["wall"] + "o" + Style.RESET_ALL)
+            lst_walls = cell.get_upper_wall(maze, x, y, show_path)
+            for keys in lst_walls.keys():
+                if keys == "upper_is_way_out" and show_path:
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL, end="")
+                else:
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
+        print(colors["wall"] + "█" + Style.RESET_ALL)
 
         # boucle sur les murs de gauche
         for x in range(width):
             cell = maze[y][x]
-            left = maze[y][x - 1] if x > 0 else None
-            print(_colorize(cell, left) + cell.get_left_wall(maze, x, y) + Style.RESET_ALL, end="")
-        print(colors["wall"] + "0" + Style.RESET_ALL)
+            lst_walls = cell.get_left_wall(maze, x, y, show_path)
+            for keys in lst_walls.keys():
+                if (keys == "left_is_way_out" or keys == "center_is_way_out") and show_path:
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL, end="")
+                else:
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
+        print(colors["wall"] + "█" + Style.RESET_ALL)
 
-    print(colors["wall"] + "oooo" * width + "o" + Style.RESET_ALL)
+    print(colors["wall"] + "█" + "▆▆▆▆" * width + "█" + Style.RESET_ALL)
 
 
 # execute color_map pour obtenir le maze coloré
@@ -64,50 +77,6 @@ def render(maze: list[list[Cell]], height: int, width: int,
     if maze:
         os.system("cls" if os.name == "nt" else "clear")
         color_map(maze, height, width, color_ind, show_path)
-
-
-# interface nouveau
-# def ui2(height: int, width: int) -> None:
-#     show_path = False
-#     color_ind = 0
-#     mazegen = gen_maze()
-#     render(mazegen, height, width, color_ind, show_path)
-#     MENU = (
-#         "\n=== a-maze-ing ===\n"
-#         "1. Re-generate a new maze\n"
-#         "2. Show/Hide path from entry to exit\n"
-#         "3. Rotate maze colors\n"
-#         "4. Quit\n"
-#     )
-#     ACTIONS = {
-#         "1": "regenerate",
-#         "2": "toggle_path",
-#         "3": "rotate",
-#         "4": "quit",
-#     }
-#     print(MENU)
-#     try:
-#         while True:
-#             param = input("Choice? (1-4): ").strip()
-#             action = ACTIONS.get(param)
-#             if action == "quit":
-#                 print("Quitting...")
-#                 break
-#             elif action == "regenerate":
-#                 mazegen2 = gen_maze()
-#                 render(mazegen2, height, width, color_ind, show_path)
-#             elif action == "toggle_path":
-#                 show_path = not show_path
-#                 render(mazegen, height, width, color_ind, show_path)
-#             elif action == "rotate":
-#                 color_ind = rotate_colors(color_ind)
-#                 render(mazegen, height, width, color_ind, show_path)
-#             else:
-#                 print("Invalid input, please enter 1 to 4.")
-#             print(MENU)
-#     except KeyboardInterrupt:
-#         print("\nKeyboard interrupt, Quitting...")
-#         exit()
 
 
 def gen_maze() -> list[list[Cell]]:
@@ -152,8 +121,8 @@ def ui(height: int, width: int) -> None:
                 color_ind = rotate_colors(color_ind)
                 render(mazegen, height, width, color_ind, show_path)
             else:
-                print("Invalid input, Quitting...")
-                return
+                mazegen = gen_maze()
+                render(mazegen, height, width, color_ind, show_path)
             print(txt)
             param = input("Choice? (1-4): ").strip()
     except KeyboardInterrupt:
