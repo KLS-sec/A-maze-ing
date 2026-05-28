@@ -4,6 +4,7 @@ from get_config import get_config
 from maze_map import maze_creator
 import role_atribution
 import way_maker
+import imperfect_maze
 
 
 def main() -> None:
@@ -21,24 +22,32 @@ def main() -> None:
     # height = config["HEIGHT"]
 
     way_maker.wanderer(maze, config["ENTRY"], config)
+    # for y in range(config["HEIGHT"]):
+    #    for x in range(config["WIDTH"]):
+    #        print(maze[y][x].get_hexa(), sep="", end=" ")
+    #    print("")
+
+    imperfect_maze.imperfect_maker(maze, config)
 
     for y in range(config["HEIGHT"]):
         for x in range(config["WIDTH"]):
             """if maze[y][x].is_way_out and not maze[y][x].is_start and not maze[y][x].is_exit:
                 print("oooo", sep="", end="")
             else:"""
-            print(maze[y][x].get_upper_wall(maze, x, y), sep="", end="")
-        print("o\n", end="")
+            print(maze[y][x].get_upper_wall(maze, x, y)[0], maze[y][x].get_upper_wall(maze, x, y)[1], sep="", end="")
+        print(maze[y][x].left_closed, "\n", end="")
         for x in range(config["WIDTH"]):
             """if maze[y][x].is_way_out and not maze[y][x].is_start and not maze[y][x].is_exit:
                 print("0...", sep="", end="")
             else:"""
-            print(maze[y][x].get_left_wall(maze, x, y), sep="", end="")
+            print(maze[y][x].get_left_wall(maze, x, y)[0], maze[y][x].get_left_wall(maze, x, y)[1], sep="", end="")
         print("0\n", end="")
 
-    print("oooo" * config["WIDTH"], "o\n", sep="", end="")
+    print(maze[y][x].left_closed * 4 * config["WIDTH"], maze[y][x].left_closed, "\n", sep="", end="")
 
-    print("Hexa =", maze[0][0].get_hexa())
+    # hexadecimal
+    print("Hexa =", hex(maze[0][0].get_hexa())[2:])
+    print("Bin =", bin(maze[0][0].get_hexa())[2:])
     print("Total wall =", maze[0][0].get_wallnumber())
 
 

@@ -8,14 +8,16 @@ import sys
 
 def atributor_start(maze: list[list[Cell]], start: list[int]) -> None:
     """Create the entry"""
-    maze[(start[0])][(start[1])].is_start = True
+    maze[(start[1])][(start[0])].is_start = True
+    maze[(start[1])][(start[0])].is_way_out = True
 
 
 def atributor_exit(maze: list[list[Cell]], exit: list[int]) -> None:
     """Create the exit and check overlapping with the entry"""
     try:
-        maze[exit[0]][exit[1]].is_exit = True
-        if maze[exit[0]][exit[1]].is_start:
+        maze[exit[1]][exit[0]].is_exit = True
+        maze[exit[1]][exit[0]].is_way_out = True
+        if maze[exit[1]][exit[0]].is_start:
             raise ValueError("Overlaping roles: Entry and Exit")
     except ValueError as err:
         print(err)

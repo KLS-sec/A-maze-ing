@@ -90,8 +90,10 @@ def maze_checker(maze: list[list[Cell]],
                  x: int, y: int) -> int:
     """Check for any unopened cell, can return the total."""
     total: int = 0
-    for x in range(data["HEIGHT"]):
-        for y in range(data["WIDTH"]):
+    for y in range(data["HEIGHT"]):
+        for x in range(data["WIDTH"]):
+            # print("x =", x, "y =", y)  # ****
+            # print("WIDTH HEIGHT", data["WIDTH"], data["HEIGHT"])
             if maze[y][x].is_visited == 0:
                 total += 1
     return int(total)
@@ -118,17 +120,18 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
             sys.exit()
 
         # Create the perfect way, only for perfect path.
-        if maze[new_loc[0]][new_loc[1]].is_exit and data["PERFECT"]:
+        if maze[new_loc[1]][new_loc[0]].is_exit and data["PERFECT"]:
             ariane_string(maze, path)
 
         # Roll back if exit is found.
-        if maze[new_loc[0]][new_loc[1]].is_exit:
+        if maze[new_loc[1]][new_loc[0]].is_exit:
             path.pop()
 
         # If wanderer did not move, it is stuck, so it remove the last.
         # position and restart from the new last location on the list.
-
-        if not maze[new_loc[0]][new_loc[1]].is_exit:
+        # print("MAZE LOC", maze[new_loc[1]][new_loc[0]].is_exit)  # ****
+        if not maze[new_loc[1]][new_loc[0]].is_exit:
+            # print("backtrack")  # ****
             if new_loc == path[-1]:
                 path.pop()
             else:
