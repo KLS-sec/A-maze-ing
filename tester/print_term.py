@@ -68,7 +68,7 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
                     print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
         print(colors["wall"] + "█" + Style.RESET_ALL)
 
-    print(colors["wall"] + "█" + "▇▇▇▇" * (width-1) + "▇▇▇█" + Style.RESET_ALL)
+    print(colors["wall"] + "▀▀▀▀" * width +  "▀" + Style.RESET_ALL)
 
 
 # execute color_map pour obtenir le maze coloré
