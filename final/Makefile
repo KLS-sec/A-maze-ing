@@ -5,7 +5,7 @@ CONFIG=config.txt
 all: ${TEST}
 
 install:
-	pip install pydantic colorama flake8 mypy
+	pip install pydantic colorama type-colorama flake8 mypy
 
 run:
 	python3 ${TEST} ${CONFIG}

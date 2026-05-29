@@ -11,7 +11,7 @@ class Config():
     height: int = 0
     entry: list[int] = [0, 0]
     exit: list[int] = [0, 0]
-    output_file: str = ""
+    output_file: str = "output_maze.txt"
     perfect: bool = True
     seed: bool = False
 

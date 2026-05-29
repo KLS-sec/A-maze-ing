@@ -17,29 +17,29 @@ class Cell:
     """
     # The different appearences for the walls depending on the cell state.
     # Normal
-    upper_left: str = "█"
-    upper_closed: str = "███"
+    upper_left: str = "o"
+    upper_closed: str = "ooo"
     upper_open: str = "   "
-    left_closed: str = "█"
+    left_closed: str = "o"
     left_open: str = " "
     center: str = "   "
 
     # Forty-two
-    upper_is_ft: str = "███"
-    upper_left_is_ft: str = "█"
-    left_is_ft: str = "█"
-    center_is_ft: str = "███"
+    upper_is_ft: str = "444"
+    upper_left_is_ft: str = "4"
+    left_is_ft: str = "4"
+    center_is_ft: str = "444"
 
     # Start
-    center_is_start: str = "███"
+    center_is_start: str = "sss"
 
     # Exit
-    center_is_exit: str = "███"
+    center_is_exit: str = "eee"
 
     # Way out
-    upper_is_way_out: str = "███"
-    left_is_way_out:  str = "█"
-    center_is_way_out: str = "███"
+    upper_is_way_out: str = " w "
+    left_is_way_out:  str = "w"
+    center_is_way_out: str = " w "
 
     is_ft: bool = False
     is_start: bool = False
@@ -164,33 +164,33 @@ def maze_creator(height: int, width: int) -> list[list[Cell]]:
     return maze
 
 
-def main() -> None:
-    from get_config import get_config
-    from role_atribution import fourtier
-    a = get_config("config.txt")
-    width = a["WIDTH"]
-    height = a["HEIGHT"]
+# def main() -> None:
+#     from get_config import get_config
+#     from role_atribution import fourtier
+#     a = get_config("config.txt")
+#     width = a.width
+#     height = a.height
 
-    maze = maze_creator(height, width)
-    maze[9][12].is_start = True
-    maze[1][3].is_exit = True
-    fourtier(maze, height, width)
+#     maze = maze_creator(height, width)
+#     maze[9][12].is_start = True
+#     maze[1][3].is_exit = True
+#     fourtier(maze, height, width)
 
-    for y in range(height):
-        for x in range(width):
-            print(maze[y][x].get_upper_wall(maze, x, y), sep="", end="")
-        print("o\n", end="")
-        for x in range(width):
-            print(maze[y][x].get_left_wall(maze, x, y), sep="", end="")
-        print("0\n", end="")
+#     for y in range(height):
+#         for x in range(width):
+#             print(maze[y][x].get_upper_wall(maze, x, y), sep="", end="")
+#         print("o\n", end="")
+#         for x in range(width):
+#             print(maze[y][x].get_left_wall(maze, x, y), sep="", end="")
+#         print("0\n", end="")
 
-    print("oooo" * width, "o\n", sep="", end="")
-    print("Hexa =", maze[0][0].get_hexa())
-    print("Total wall =", maze[0][0].get_wallnumber())
+#     print("oooo" * width, "o\n", sep="", end="")
+#     print("Hexa =", maze[0][0].get_hexa())
+#     print("Total wall =", maze[0][0].get_wallnumber())
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 """
 from abc import ABC, abstractmethod
