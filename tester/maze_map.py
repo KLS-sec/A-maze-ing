@@ -37,9 +37,9 @@ class Cell:
     center_is_exit: str = "███"
 
     # Way out
-    upper_is_way_out: str = "▓▓▓"
-    left_is_way_out:  str = "▓"
-    center_is_way_out: str = "▓▓▓"
+    upper_is_way_out: str = "███"
+    left_is_way_out:  str = "█"
+    center_is_way_out: str = "███"
 
     is_ft: bool = 0
     is_start: bool = 0

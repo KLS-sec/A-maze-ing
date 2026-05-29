@@ -9,11 +9,11 @@ init(autoreset=True)  # reset de couleurs
 # combinaison de couleurs
 COLOR_SCHEMES = [
     {"wall": Fore.WHITE, "start": Fore.BLUE, "exit": Fore.RED,
-     "ft": Fore.MAGENTA, "path": Fore.YELLOW},  # combinaison 1
-    {"wall": Fore.CYAN,  "start": Fore.YELLOW, "exit": Fore.MAGENTA,
+     "ft": Fore.MAGENTA, "path": Fore.GREEN},  # combinaison 1
+    {"wall": Fore.CYAN,  "start": Fore.YELLOW, "exit": Fore.BLUE,
      "ft": Fore.GREEN, "path": Fore.RED},  # combinaison 2
-    {"wall": Fore.BLUE,  "start": Fore.GREEN,  "exit": Fore.YELLOW,
-     "ft": Fore.RED,     "path": Fore.MAGENTA},  # combinaison 3
+    {"wall": Fore.BLUE,  "start": Fore.GREEN,  "exit": Fore.MAGENTA,
+     "ft": Fore.RED,     "path": Fore.YELLOW},  # combinaison 3
 ]
 
 
@@ -68,7 +68,7 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
                     print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
         print(colors["wall"] + "█" + Style.RESET_ALL)
 
-    print(colors["wall"] + "▀▀▀▀" * width +  "▀" + Style.RESET_ALL)
+    print(colors["wall"] + "████" * width +  "█" + Style.RESET_ALL)
 
 
 # execute color_map pour obtenir le maze coloré
