@@ -52,23 +52,29 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
             lst_walls = cell.get_upper_wall(maze, x, y, show_path)
             for keys in lst_walls.keys():
                 if keys == "upper_is_way_out" and show_path:
-                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL, end="")
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
                 else:
-                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
-        print(colors["wall"] + "█" + Style.RESET_ALL)
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
+        print(colors["wall"] + "o" + Style.RESET_ALL)
 
         # boucle sur les murs de gauche
         for x in range(width):
             cell = maze[y][x]
             lst_walls = cell.get_left_wall(maze, x, y, show_path)
             for keys in lst_walls.keys():
-                if (keys == "left_is_way_out" or keys == "center_is_way_out") and show_path:
-                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL, end="")
+                if (
+                    keys == "left_is_way_out" or keys == "center_is_way_out"
+                ) and show_path:
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
                 else:
-                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL, end="")
-        print(colors["wall"] + "█" + Style.RESET_ALL)
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
+        print(colors["wall"] + "o" + Style.RESET_ALL)
 
-    print(colors["wall"] + "████" * width + "█" + Style.RESET_ALL)
+    print(colors["wall"] + "oooo" * width + "o" + Style.RESET_ALL)
 
 
 # execute color_map pour obtenir le maze coloré
@@ -86,13 +92,11 @@ def gen_maze() -> list[list[Cell]]:
     from get_config import get_config
 
     data = get_config("config.txt")
-    height = data["HEIGHT"]
-    width = data["WIDTH"]
-    maze = maze_creator(height, width)
-    fourtier(maze, height, width)
-    atributor_start(maze, data["ENTRY"])
-    atributor_exit(maze, data["EXIT"])
-    wanderer(maze, data["ENTRY"], data)
+    maze = maze_creator(data.height, data.height)
+    fourtier(maze, data.height, data.width)
+    atributor_start(maze, data.entry)
+    atributor_exit(maze, data.exit)
+    wanderer(maze, data.entry, data)
     return maze
 
 
@@ -133,6 +137,4 @@ if __name__ == "__main__":
     from get_config import get_config
 
     data = get_config("config.txt")
-    height = data["HEIGHT"]
-    width = data["WIDTH"]
-    ui(height, width)
+    ui(data.height, data.width)

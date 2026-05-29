@@ -6,6 +6,16 @@ import re
 import sys
 
 
+class Config():
+    width: int = 0
+    height: int = 0
+    entry: list[int] = [0, 0]
+    exit: list[int] = [0, 0]
+    output_file: str = ""
+    perfect: bool = True
+    seed: bool = False
+
+
 class config_storage(BaseModel):
     """Multiple check for the config file input."""
     width: int = Field(ge=2, le=50)
@@ -38,7 +48,7 @@ class config_storage(BaseModel):
         return self
 
 
-def get_config(filename: str) -> dict[str, bool | str | int | list[int]]:
+def get_config(filename: str) -> Config:
     """Retrieve the data from the indicated file.
 
     Retrieve every data, try to convert them into the correct type and
@@ -51,7 +61,7 @@ def get_config(filename: str) -> dict[str, bool | str | int | list[int]]:
     Use:
         config = get_config("filename.txt")
     """
-    config: dict[str, bool | str | int | list[int]] = {}
+    config = Config()
     try:
         with open("config.txt", "r") as a:
             for line in a:
@@ -59,11 +69,13 @@ def get_config(filename: str) -> dict[str, bool | str | int | list[int]]:
                 if not line:
                     continue
                 key, value = line.split("=")
-                config[key] = value
 
                 if key in {"WIDTH", "HEIGHT"}:
                     if value.isdigit():
-                        config[key] = int(value)
+                        if key == "HEIGHT":
+                            config.height = int(value)
+                        else:
+                            config.width = int(value)
                     else:
                         raise ValueError("Size error, invalid input")
 
@@ -74,7 +86,10 @@ def get_config(filename: str) -> dict[str, bool | str | int | list[int]]:
                             raise ValueError("Entry or Exit error, invalid"
                                              " coordinates.\nExemple: 5,8")
                         if parts[0].isdigit() and parts[1].isdigit():
-                            config[key] = [int(parts[0]), int(parts[1])]
+                            if key == "HEIGHT":
+                                config.entry = [int(parts[0]), int(parts[1])]
+                            else:
+                                config.exit = [int(parts[0]), int(parts[1])]
                         else:
                             raise ValueError("Entry or Exit error, invalid"
                                              " coordinates.\nExemple: 5,8")
@@ -88,26 +103,26 @@ def get_config(filename: str) -> dict[str, bool | str | int | list[int]]:
 
                 if key == "PERFECT":
                     if value == "True":
-                        config[key] = bool(True)
+                        config.perfect = True
                     elif value == "False":
-                        config[key] = bool(False)
+                        config.perfect = False
                     else:
                         raise ValueError("Type error, what kind of maze do you"
                                          " want?")
 
                 if key == "SEED":
                     if value == "True":
-                        config[key] = bool(True)
+                        config.seed = True
                     elif value == "False":
-                        config[key] = bool(False)
+                        config.seed = False
 
         try:
-            tester = config_storage(width=config["WIDTH"],
-                                    height=config["HEIGHT"],
-                                    entry=config["ENTRY"],
-                                    exit=config["EXIT"],
-                                    output_file=config["OUTPUT_FILE"],
-                                    perfect=config["PERFECT"])
+            tester = config_storage(width=config.width,
+                                    height=config.height,
+                                    entry=config.entry,
+                                    exit=config.exit,
+                                    output_file=config.output_file,
+                                    perfect=config.perfect)
         except ValidationError as err:
             for e in err.errors():
                 print(e["msg"])
@@ -129,13 +144,13 @@ def main() -> None:
     print("")
     a = get_config("config.txt")
     print(a)
-    width = a["WIDTH"]
-    height = a["HEIGHT"]
-    entry = a["ENTRY"]
-    exit = a["EXIT"]
-    output_file = a["OUTPUT_FILE"]
-    perfect = a["PERFECT"]
-    seed = a["SEED"]
+    width = a.width
+    height = a.height
+    entry = a.entry
+    exit = a.exit
+    output_file = a.output_file
+    perfect = a.perfect
+    seed = a.seed
     print("")
     print(width, height, entry, exit, output_file, perfect, seed)
 

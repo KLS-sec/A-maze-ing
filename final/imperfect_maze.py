@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from get_config import Config
 from maze_map import Cell
 import way_maker
 import random
@@ -8,16 +9,21 @@ from role_atribution import ariane_string
 
 # break the wall semi randomly to make it imperfect
 # It works
-def imperfect_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list]):
+def imperfect_maker(maze: list[list[Cell]],
+                    data: Config):
     for y in range(len(maze)):
         for x in range(len(maze[y])):
             if maze[y][x].get_wallnumber() > 2:
                 directions = []
                 if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y][x].north:
                     directions.append("north")
-                if (x < (data["WIDTH"] - 1) and maze[y][x + 1].is_ft != 1) and maze[y][x].east:
+                if (
+                    x < (data.width - 1) and maze[y][x + 1].is_ft != 1
+                ) and maze[y][x].east:
                     directions.append("east")
-                if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1) and maze[y][x].south:
+                if (
+                    y < (data.height - 1) and maze[y + 1][x].is_ft != 1
+                ) and maze[y][x].south:
                     directions.append("south")
                 if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x].west:
                     directions.append("west")
@@ -29,65 +35,76 @@ def imperfect_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | l
                 directionss = []
                 if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y][x].north:
                     directionss.append("north")
-                if (x < (data["WIDTH"] - 1) and maze[y][x + 1].is_ft != 1) and maze[y][x].east:
+                if (
+                    x < (data.width - 1) and maze[y][x + 1].is_ft != 1
+                ) and maze[y][x].east:
                     directionss.append("east")
-                if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1) and maze[y][x].south:
+                if (
+                    y < (data.width - 1) and maze[y + 1][x].is_ft != 1
+                ) and maze[y][x].south:
                     directionss.append("south")
                 if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x].west:
                     directionss.append("west")
 
                 # Protection to avoid crash at angles
                 if len(directionss):
-                    chosen: str = random.choice(directionss)
+                    chosen2: str = random.choice(directionss)
                     if random.randrange(0, 8) == 0:
-                        way_maker.wall_breaker(maze, x, y, chosen)
+                        way_maker.wall_breaker(maze, x, y, chosen2)
 
 
 # Filter the breakable wall
-def open_door(maze: list[list[Cell]], data: dict[str, bool | str | int | list], x: int, y: int):
+def open_door(maze: list[list[Cell]],
+              data: Config, x: int, y: int):
     directions = []
-    if y >= 1 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1 and maze[y][x].north != 1:
+    if y >= 1 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1\
+            and maze[y][x].north != 1:
         directions.append("north")
-        maze[y - 1][x].is_visited = 1
-    if (x < (data["WIDTH"] - 1) and maze[y][x + 1].is_ft != 1 and
+        maze[y - 1][x].is_visited = True
+    if (x < (data.width - 1) and maze[y][x + 1].is_ft != 1 and
             maze[y][x + 1].is_visited != 1) and maze[y][x].east != 1:
         directions.append("east")
-        maze[y][x + 1].is_visited = 1
-    if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1 and
+        maze[y][x + 1].is_visited = True
+    if (y < (data.height - 1) and maze[y + 1][x].is_ft != 1 and
             maze[y + 1][x].is_visited != 1) and maze[y][x].south != 1:
         directions.append("south")
-        maze[y + 1][x].is_visited = 1
-    if x >= 1 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1 and maze[y][x].west != 1:
+        maze[y + 1][x].is_visited = True
+    if x >= 1 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1\
+            and maze[y][x].west != 1:
         directions.append("west")
-        maze[y][x - 1].is_visited = 1
+        maze[y][x - 1].is_visited = True
     if maze[y][x].is_start == 1:
         print(directions)
     return directions
 
+
 # refaire de zero
 # faire un systeme avec une liste de sauvegarde, une liste en cours
 # d usage et une liste a rajouter?
-def imperfect_solver(maze: list[list[Cell]], data: dict[str, bool | str | int | list]):
+def imperfect_solver(maze: list[list[Cell]], data: Config):
 
     # reset the visited status
-    for a in range(data["HEIGHT"]):
-        for b in range(data["WIDTH"]):
+    for a in range(data.height):
+        for b in range(data.width):
             if not maze[a][b].is_ft:
-                maze[a][b].is_visited = 0
+                maze[a][b].is_visited = False
 
     # list all the diferent ways
-    work_flow: list[list[list[int]]] = [[list(data["ENTRY"])]]
+    work_flow: list[list[list[int]]] = [[list(data.entry)]]
 
     # set entry as visited
-    maze[data["ENTRY"][1]][data["ENTRY"][0]].is_visited = 1
+    maze[data.entry[1]][data.entry[0]].is_visited = True
 
-    # Utilise direction comme un compteur, je le vide pour eviter d allonger en boucle le meme lot de cheminsd
-    # Si j ajoute NSE, alors ca vas creer les chemins SE et il vas attaquer le chemin S au coup suivant,
-    # Je veut eviter ca pour ne pas avoir une meduse mono directionnelle qui englobe tout en forme d escargot
-    while maze[data["EXIT"][1]][data["EXIT"][0]].is_visited == 0:  # continue until exit is set a visited
+    # Utilise direction comme un compteur, je le vide pour eviter d allonger
+    # en boucle le meme lot de cheminsd.
+    # Si j ajoute NSE, alors ca vas creer les chemins SE et il vas attaquer le
+    # chemin S au coup suivant,
+    # Je veut eviter ca pour ne pas avoir une meduse mono directionnelle qui
+    # englobe tout en forme d escargot
+    while maze[data.exit[1]][data.exit[0]].is_visited == 0:  # continue until exit is set a visited
         new_branch: list[list[int]] = []
         for c in work_flow:  # cycle through all the ways
-            directions = []  # stock the possible forks
+            directions: list[str] = []  # stock the possible forks
             if len(directions):  # Empty the previous forks and cycle to avoir following the same group of forks **** may actually be useless
                 directions.pop()
                 continue
@@ -101,18 +118,18 @@ def imperfect_solver(maze: list[list[Cell]], data: dict[str, bool | str | int | 
             # create the new list while adding the directions
             while len(directions):
                 # print("here z")  # ****
-                new_way = [p[:] for p in c]
+                new_way: list[int] = [p[:] for p in c]
                 if directions[-1] == "north":
-                    maze[new_way[-1][1] - 1][new_way[-1][0]].is_visited = 1
+                    maze[new_way[-1][1] - 1][new_way[-1][0]].is_visited = True
                     new_way.append([new_way[-1][0], new_way[-1][1] - 1])
                 if directions[-1] == "east":
-                    maze[new_way[-1][1]][new_way[-1][0] + 1].is_visited = 1
+                    maze[new_way[-1][1]][new_way[-1][0] + 1].is_visited = True
                     new_way.append([new_way[-1][0] + 1, new_way[-1][1]])
                 if directions[-1] == "south":
-                    maze[new_way[-1][1] + 1][new_way[-1][0]].is_visited = 1
+                    maze[new_way[-1][1] + 1][new_way[-1][0]].is_visited = True
                     new_way.append([new_way[-1][0], new_way[-1][1] + 1])
                 if directions[-1] == "west":
-                    maze[new_way[-1][1]][new_way[-1][0] - 1].is_visited = 1
+                    maze[new_way[-1][1]][new_way[-1][0] - 1].is_visited = True
                     new_way.append([new_way[-1][0] - 1, new_way[-1][1]])
                 new_branch.append(new_way)
                 directions.pop()
@@ -120,13 +137,15 @@ def imperfect_solver(maze: list[list[Cell]], data: dict[str, bool | str | int | 
         while len(work_flow):
             work_flow.pop()
         while len(new_branch):
-            # print("ddddddddddddddddddddddddddddddddddddddddddddddddddddddd")  # ****
+            # print("ddddddddddddddddddddddddddddddddddddddddddddd")  # ****
             work_flow.append(new_branch[-1])
             new_branch.pop()
-            # optimisation possible: si aucun chemin dispo et pas sur exit: efface le chemin. Ca permet de trier les dead end pour economiser des passages
+            # optimisation possible: si aucun chemin dispo et pas sur exit:
+            # efface le chemin. Ca permet de trier les dead end pour
+            # economiser des passages
         for c in work_flow:
             # print("YYYYYYYYYYY")  # ****
-            # print(c[-1][1], c[-1][0], "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")  # ****
+            # print(c[-1][1], c[-1][0], "HHHHHHHHHHHHHHHHHHH")  # ****
             if maze[c[-1][1]][c[-1][0]].is_exit:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
                 ariane_string(maze, c)
@@ -178,5 +197,5 @@ def way_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list],
         return [x - 1, y]
 """
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

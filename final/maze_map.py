@@ -41,16 +41,16 @@ class Cell:
     left_is_way_out:  str = "█"
     center_is_way_out: str = "███"
 
-    is_ft: bool = 0
-    is_start: bool = 0
-    is_exit: bool = 0
-    is_way_out: bool = 0
-    is_visited: bool = 0
+    is_ft: bool = False
+    is_start: bool = False
+    is_exit: bool = False
+    is_way_out: bool = False
+    is_visited: bool = False
 
-    north: bool = 1
-    east: bool = 1
-    south: bool = 1
-    west: bool = 1
+    north: bool = True
+    east: bool = True
+    south: bool = True
+    west: bool = True
 
     def get_hexa(self) -> int:
         # Return the hexadecimal value.
@@ -61,7 +61,8 @@ class Cell:
         # Return the number of closed wall for the imperfect maze.
         return (self.north + self.east + self.south + self.west)
 
-    def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int, show_path: bool) -> dict[str, str]:
+    def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int,
+                       show_path: bool) -> dict[str, str]:
         # Return the upper wall to print depending on the cell location.
         upper_wall = {}
         # upper-left
@@ -114,7 +115,8 @@ class Cell:
         else:
             return self.upper_open"""
 
-    def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int, show_path: bool) -> dict[str, str]:
+    def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int,
+                      show_path: bool) -> dict[str, str]:
         # Return the left wall to print depending on the cell location.
         left_center = {}
         # left
@@ -122,7 +124,9 @@ class Cell:
             left_center["left_is_ft"] = self.left_is_ft
         elif self.west == 1:
             left_center["left_closed"] = self.left_closed
-        elif self.is_way_out == 1 and (maze[y][x - 1].is_way_out == 1 or maze[y][x - 1].is_exit == 1 or maze[y][x - 1].is_start == 1):
+        elif self.is_way_out == 1 and (maze[y][x - 1].is_way_out == 1 or
+                                       maze[y][x - 1].is_exit == 1 or
+                                       maze[y][x - 1].is_start == 1):
             if show_path:
                 left_center["left_is_way_out"] = self.left_is_way_out
             else:
