@@ -148,7 +148,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
             # print(c[-1][1], c[-1][0], "HHHHHHHHHHHHHHHHHHH")  # ****
             if maze[c[-1][1]][c[-1][0]].is_exit:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
-                ariane_string(maze, c)
+                ariane_string(maze, c, data)
                 print("HERE Y")  # ****
         print("HERE X")  # ****
 

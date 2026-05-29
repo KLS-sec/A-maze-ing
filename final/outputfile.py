@@ -36,7 +36,7 @@ def generate_output_file(
         f.write("[MAZE]\n")
         for row in maze:
             # conversion en hexa par cellule pour chaque ligne ("X" = maj "x" = min)
-            line = "".join(format(Cell.get_hexa, "X") for cell in row)
+            line = "".join(cell.get_hexa() for cell in row)
             f.write(line + "\n")
 
         f.write("[ENTRY]\n")

@@ -123,7 +123,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
 
         # Create the perfect way, only for perfect path.
         if maze[new_loc[1]][new_loc[0]].is_exit and data.perfect:
-            ariane_string(maze, path)
+            ariane_string(maze, path, data)
 
         # Roll back if exit is found.
         if maze[new_loc[1]][new_loc[0]].is_exit:

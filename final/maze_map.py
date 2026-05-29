@@ -54,8 +54,8 @@ class Cell:
 
     def get_hexa(self) -> int:
         # Return the hexadecimal value.
-        return (self.north * 1 + self.east * 2 + self.south * 4 +
-                self.west * 8)
+        return hex(self.north * 1 + self.east * 2 + self.south * 4 +
+                   self.west * 8)[2:]
 
     def get_wallnumber(self) -> int:
         # Return the number of closed wall for the imperfect maze.

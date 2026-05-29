@@ -2,6 +2,8 @@
 
 from maze_map import maze_creator, Cell
 import sys
+from get_config import Config
+import outputfile
 
 # checked, should be complete
 
@@ -54,13 +56,16 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
         sys.exit()
 
 
-def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
+def ariane_string(maze: list[list[Cell]], the_way: list[list[int]],
+                  config: Config):
     """Create the exit way
 
     Take the list of coordinates leading to the exit and change the atribute
     is_way_out"""
     for x, y in the_way:
         maze[y][x].is_way_out = True
+    outputfile.generate_output_file(config.output_file, maze, config.entry,
+                                    config.exit, the_way)
 
 
 def main() -> None:

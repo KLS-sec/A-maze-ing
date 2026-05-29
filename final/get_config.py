@@ -14,6 +14,7 @@ class Config():
     output_file: str = "output_maze.txt"
     perfect: bool = True
     seed: bool = False
+    path: list[list[int]]  # ****
 
 
 class config_storage(BaseModel):
