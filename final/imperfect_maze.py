@@ -102,7 +102,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
     # Je veut eviter ca pour ne pas avoir une meduse mono directionnelle qui
     # englobe tout en forme d escargot
     while maze[data.exit[1]][data.exit[0]].is_visited == 0:  # continue until exit is set a visited
-        new_branch: list[list[int]] = []
+        new_branch: list[list[list[int]]] = []
         for c in work_flow:  # cycle through all the ways
             directions: list[str] = []  # stock the possible forks
             if len(directions):  # Empty the previous forks and cycle to avoir following the same group of forks **** may actually be useless
@@ -118,7 +118,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
             # create the new list while adding the directions
             while len(directions):
                 # print("here z")  # ****
-                new_way: list[int] = [p[:] for p in c]
+                new_way: list[list[int]] = [p[:] for p in c]
                 if directions[-1] == "north":
                     maze[new_way[-1][1] - 1][new_way[-1][0]].is_visited = True
                     new_way.append([new_way[-1][0], new_way[-1][1] - 1])
