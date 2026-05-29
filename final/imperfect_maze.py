@@ -49,7 +49,7 @@ def imperfect_maker(maze: list[list[Cell]],
                 # Protection to avoid crash at angles
                 if len(directionss):
                     chosen2: str = random.choice(directionss)
-                    if random.randrange(0, 8) == 0:
+                    if random.randrange(0, 4) == 0:
                         way_maker.wall_breaker(maze, x, y, chosen2)
 
 
