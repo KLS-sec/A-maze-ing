@@ -2,7 +2,6 @@
 
 import random
 from maze_map import Cell
-from get_config import Config
 from role_atribution import ariane_string
 import sys
 
@@ -35,8 +34,8 @@ def wall_breaker(maze: list[list[Cell]], x: int, y: int, wall: str) -> None:
         maze[y][x - 1].is_visited = True
 
 
-def way_maker(maze: list[list[Cell]], data: Config,
-              x: int, y: int) -> list[int]:
+def way_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list[int]],
+              x: int, y: int):
     """Select and open the next path in the maze.
 
     Determine which walls can be broken, randomly select one,
@@ -50,10 +49,10 @@ def way_maker(maze: list[list[Cell]], data: Config,
     directions = []
     if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1:
         directions.append("north")
-    if (x < (data.width - 1) and maze[y][x + 1].is_ft != 1 and
+    if (x < (int(data["WIDTH"]) - 1) and maze[y][x + 1].is_ft != 1 and
             maze[y][x + 1].is_visited != 1):
         directions.append("east")
-    if (y < (data.height - 1) and maze[y + 1][x].is_ft != 1 and
+    if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1 and
             maze[y + 1][x].is_visited != 1):
         directions.append("south")
     if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1:
@@ -84,16 +83,15 @@ def way_maker(maze: list[list[Cell]], data: Config,
         return [x, y + 1]
     if chosen == "west":
         return [x - 1, y]
-    return []
 
 
 def maze_checker(maze: list[list[Cell]],
-                 data: Config,
+                 data: dict[str, bool | str | int | list],
                  x: int, y: int) -> int:
     """Check for any unopened cell, can return the total."""
     total: int = 0
-    for y in range(data.height):
-        for x in range(data.width):
+    for y in range(data["HEIGHT"]):
+        for x in range(data["WIDTH"]):
             # print("x =", x, "y =", y)  # ****
             # print("WIDTH HEIGHT", data["WIDTH"], data["HEIGHT"])
             if maze[y][x].is_visited == 0:
@@ -103,7 +101,7 @@ def maze_checker(maze: list[list[Cell]],
 
 # **** faire en sort que si il tombe sur exit il revienne en arriere
 def wanderer(maze: list[list[Cell]], loc: list[int],
-             data: Config) -> None:
+             data: dict[str, bool | str | int | list]) -> None:
     """Explore the maze and create valid paths.
 
     Move through the maze while opening walls between cells.
@@ -122,7 +120,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
             sys.exit()
 
         # Create the perfect way, only for perfect path.
-        if maze[new_loc[1]][new_loc[0]].is_exit and data.perfect:
+        if maze[new_loc[1]][new_loc[0]].is_exit and data["PERFECT"]:
             ariane_string(maze, path)
 
         # Roll back if exit is found.
@@ -146,11 +144,11 @@ def main() -> None:
     from role_atribution import atributor_exit, atributor_start, fourtier
 
     data = get_config("config.txt")
-    maze = maze_creator(data.height, data.width)
+    maze = maze_creator(data["HEIGHT"], data["WIDTH"])
 
-    fourtier(maze, data.height, data.width)
-    atributor_start(maze, data.entry)
-    atributor_exit(maze, data.exit)
+    fourtier(maze, data["HEIGHT"], data["WIDTH"])
+    atributor_start(maze, data["ENTRY"])
+    atributor_exit(maze, data["EXIT"])
     print("END REACHED")
 
 
