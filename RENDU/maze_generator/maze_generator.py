@@ -522,7 +522,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
             ariane_string(maze, path, data)
             data.path = path.copy()
             data.path.append(new_loc)
-            path_found == 1
+            path_found = True
 
         # Roll back if exit is found.
         if maze[new_loc[1]][new_loc[0]].is_exit:
@@ -899,7 +899,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
                 ariane_string(maze, c, data)
                 data.path = c.copy()
                 # data.path.append([c[-1][1]], [c[-1][0]])
-                path_found == 1
+                path_found = True
 
 
 """
