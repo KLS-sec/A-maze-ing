@@ -161,6 +161,7 @@ def maze_creator(height: int, width: int) -> list[list[Cell]]:
         for _ in range(width):
             row.append(Cell())
         maze.append(row)
+    print(len(maze[0]))  # ****
     return maze
 
 

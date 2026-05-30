@@ -149,6 +149,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
             if maze[c[-1][1]][c[-1][0]].is_exit:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
                 ariane_string(maze, c, data)
+                Config.path = c
                 print("HERE Y")  # ****
         print("HERE X")  # ****
 

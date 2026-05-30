@@ -92,7 +92,7 @@ def gen_maze() -> list[list[Cell]]:
     from get_config import get_config
 
     data = get_config("config.txt")
-    maze = maze_creator(data.height, data.height)
+    maze = maze_creator(data.height, data.width)
     fourtier(maze, data.height, data.width)
     atributor_start(maze, data.entry)
     atributor_exit(maze, data.exit)

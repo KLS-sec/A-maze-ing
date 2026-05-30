@@ -48,6 +48,7 @@ def way_maker(maze: list[list[Cell]], data: Config,
     """
     # List the breakables walls.
     directions = []
+    # print(len(maze[y]))  # ****
     if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1:
         directions.append("north")
     if (x < (data.width - 1) and maze[y][x + 1].is_ft != 1 and
@@ -88,12 +89,11 @@ def way_maker(maze: list[list[Cell]], data: Config,
 
 
 def maze_checker(maze: list[list[Cell]],
-                 data: Config,
-                 x: int, y: int) -> int:
+                 data: Config) -> int:  # , path[-1][0], path[-1][1] ****
     """Check for any unopened cell, can return the total."""
     total: int = 0
-    for y in range(data.height):
-        for x in range(data.width):
+    for y in range(len(maze)):
+        for x in range(len(maze[y])):
             # print("x =", x, "y =", y)  # ****
             # print("WIDTH HEIGHT", data["WIDTH"], data["HEIGHT"])
             if maze[y][x].is_visited == 0:
@@ -113,7 +113,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
     """
     path: list[list[int]] = [loc]
 
-    while maze_checker(maze, data, path[-1][0], path[-1][1]):
+    while maze_checker(maze, data):  # , path[-1][0], path[-1][1] ****
         try:
             new_loc: list[int] = way_maker(maze, data,
                                            path[-1][0], path[-1][1])
@@ -124,6 +124,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
         # Create the perfect way, only for perfect path.
         if maze[new_loc[1]][new_loc[0]].is_exit and data.perfect:
             ariane_string(maze, path, data)
+            Config.path = path
 
         # Roll back if exit is found.
         if maze[new_loc[1]][new_loc[0]].is_exit:
