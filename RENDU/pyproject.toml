@@ -7,7 +7,13 @@ name = "mazegen"
 version = "1.0.0"
 description = "A maze generator using backtracking algorithm"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 authors = [
     {name = "mmakhmae, kle-scor", email = "you@example.com"},
+]
+
+dependencies = [
+    "pydantic",
+    "colorama",
+    "types-colorama",
 ]

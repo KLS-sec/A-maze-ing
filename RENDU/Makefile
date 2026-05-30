@@ -4,7 +4,8 @@ CONFIG=config.txt
 all: ${NAME}
 
 install:
-	pip install pydantic colorama types-colorama flake8 mypy
+	pip install poetry
+	python3 -m poetry install --no-root
 
 run:
 	python3 ${NAME} ${CONFIG}
