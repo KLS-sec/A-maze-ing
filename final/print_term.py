@@ -52,7 +52,8 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
         # boucle sur les murs du haut
         for x in range(width):
             cell = maze[y][x]
-            lst_walls = cell.get_upper_wall(maze, x, y, show_path)
+            lst_walls: dict[str, str] = cell.get_upper_wall(maze, x,
+                                                            y, show_path)
             for keys in lst_walls.keys():
                 if keys == "upper_is_way_out" and show_path:
                     print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
@@ -88,22 +89,22 @@ def render(maze: list[list[Cell]], height: int, width: int,
         color_map(maze, height, width, color_ind, show_path)
 
 
-def gen_maze() -> list[list[list[Cell]], Config]:
+def gen_maze(data: Config) -> list[list[Cell]]:
 
-    data = get_config("config.txt")
     maze = maze_creator(data.height, data.width)
     fourtier(maze, data.height, data.width)
     atributor_start(maze, data.entry)
     atributor_exit(maze, data.exit)
     wanderer(maze, data.entry, data)
-    return [maze, data]
+    return maze
 
 
 # interface ancien
 def ui() -> None:
     show_path = True
     color_ind = 0
-    mazegen, data = gen_maze()
+    data = get_config("config.txt")
+    mazegen = gen_maze(data)
     outputfile.generate_output_file(data.output_file, mazegen, data.entry,
                                     data.exit, data.path)
     render(mazegen, data.height, data.width, color_ind, show_path)
@@ -117,7 +118,7 @@ def ui() -> None:
         param = input("Choice? (1-4): ").strip()
         while param != "4":
             if param == "1":
-                mazegen = gen_maze()
+                mazegen = gen_maze(data)
                 render(mazegen, data.height, data.width, color_ind, show_path)
             elif param == "2":
                 show_path = not show_path
@@ -126,7 +127,7 @@ def ui() -> None:
                 color_ind = rotate_colors(color_ind)
                 render(mazegen, data.height, data.width, color_ind, show_path)
             else:
-                mazegen = gen_maze()
+                mazegen = gen_maze(data)
                 render(mazegen, data.height, data.width, color_ind, show_path)
             print(txt)
             param = input("Choice? (1-4): ").strip()

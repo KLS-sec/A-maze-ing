@@ -25,8 +25,8 @@ def coords_to_direction(path: List[list[int]]) -> str:
 def generate_output_file(
     filename: str,
     maze: list[list[Cell]],  # la map de maze_map
-    entry: tuple[int, int],
-    exit: tuple[int, int],
+    entry: list[int],
+    exit: list[int],
     solution_path: list[list[int]]  # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
 ) -> None:
 

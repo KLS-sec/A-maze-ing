@@ -52,9 +52,9 @@ class Cell:
     south: bool = True
     west: bool = True
 
-    def get_hexa(self) -> int:
+    def get_hexa(self) -> str:
         # Return the hexadecimal value.
-        return hex(self.north * 1 + self.east * 2 + self.south * 4 +
+        return hex(self.north * 1 + self.east * 2 + self.south * 4 + 
                    self.west * 8)[2:]
 
     def get_wallnumber(self) -> int:

@@ -9,8 +9,8 @@ import sys
 class Config():
     width: int = 0
     height: int = 0
-    entry: tuple[int, int] = (0, 0)
-    exit: tuple[int, int] = (0, 0)
+    entry: list[int]
+    exit: list[int]
     output_file: str = "output_maze.txt"
     perfect: bool = True
     seed: bool = False
