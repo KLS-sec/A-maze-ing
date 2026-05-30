@@ -9,8 +9,8 @@ import sys
 class Config():
     width: int = 0
     height: int = 0
-    entry: list[int] = [0, 0]
-    exit: list[int] = [0, 0]
+    entry: tuple[int, int] = (0, 0)
+    exit: tuple[int, int] = (0, 0)
     output_file: str = "output_maze.txt"
     perfect: bool = True
     seed: bool = False
@@ -87,10 +87,10 @@ def get_config(filename: str) -> Config:
                             raise ValueError("Entry or Exit error, invalid"
                                              " coordinates.\nExemple: 5,8")
                         if parts[0].isdigit() and parts[1].isdigit():
-                            if key == "HEIGHT":
-                                config.entry = [int(parts[0]), int(parts[1])]
+                            if key == "ENTRY":
+                                config.entry = (int(parts[0]), int(parts[1]))
                             else:
-                                config.exit = [int(parts[0]), int(parts[1])]
+                                config.exit = (int(parts[0]), int(parts[1]))
                         else:
                             raise ValueError("Entry or Exit error, invalid"
                                              " coordinates.\nExemple: 5,8")

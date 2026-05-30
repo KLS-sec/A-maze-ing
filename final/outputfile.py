@@ -27,7 +27,7 @@ def generate_output_file(
     maze: list[list[Cell]],  # la map de maze_map
     entry: tuple[int, int],
     exit: tuple[int, int],
-    solution_path: list[tuple[int, int]]  # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
+    solution_path: list[list[int]]  # a changer si c'est pas comme ca: [(0,0), (0,1), (0,2), (1,2), (2,2), (2,3)]
 ) -> None:
 
     with open(filename, "w") as f:
@@ -36,7 +36,7 @@ def generate_output_file(
         f.write("[MAZE]\n")
         for row in maze:
             # conversion en hexa par cellule pour chaque ligne ("X" = maj "x" = min)
-            line = "".join(cell.get_hexa() for cell in row)
+            line = "".join(str(cell.get_hexa()) for cell in row)
             f.write(line + "\n")
 
         f.write("[ENTRY]\n")
