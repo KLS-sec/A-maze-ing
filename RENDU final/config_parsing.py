@@ -1,4 +1,5 @@
 class Config:
+    """Store all the data about the maze to be easily reused everywhere."""
     width: int = 0
     height: int = 0
     entry: list[int]
@@ -6,4 +7,5 @@ class Config:
     output_file: str = "output_maze.txt"
     perfect: bool = True
     seed: bool = False
-    path: list[list[int]]  # ****
+    # store the shortest way from start to finish
+    path: list[list[int]]

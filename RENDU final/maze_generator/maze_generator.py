@@ -5,8 +5,6 @@ from typing import List
 from dataclasses import dataclass
 
 
-# Mostly done, rest the last 2 bonuses
-# **** add the filled and the empty propriety
 @dataclass
 class Cell:
     """Create a Cell of the maze, pilot the other functions.
@@ -85,7 +83,7 @@ class Cell:
         # closed
         elif self.north == 1:
             upper_wall["upper_closed"] = self.upper_closed
-        elif self.is_way_out == 1 and maze[y - 1][x].is_way_out == 1:  # ****
+        elif self.is_way_out == 1 and maze[y - 1][x].is_way_out == 1:
             # add the conditionnal to trigger the coloration
             if show_path:
                 upper_wall["upper_is_way_out"] = self.upper_is_way_out
@@ -96,29 +94,6 @@ class Cell:
             upper_wall["upper_open"] = self.upper_open
 
         return upper_wall
-
-        """
-        if self.is_ft or (maze[y - 1][x].is_ft and y != 0):
-            return self.upper_ft
-        elif maze[y - 1][x - 1].is_ft or maze[y][x - 1].is_ft:
-            return self.upper_left_is_ft
-
-        if self.is_start or (maze[y - 1][x].is_start and y != 0):
-            return self.upper_start
-        elif (maze[y - 1][x - 1].is_start and x != 0 and
-              y != 0) or (maze[y][x - 1].is_start and x != 0):
-            return self.upper_left_is_start
-
-        if self.is_exit or (maze[y - 1][x].is_exit and y != 0):
-            return self.upper_exit
-        elif (maze[y - 1][x - 1].is_exit and x != 0 and
-              y != 0) or (maze[y][x - 1].is_exit and x != 0):
-            return self.upper_left_is_exit
-
-        elif self.north:
-            return self.upper_closed
-        else:
-            return self.upper_open"""
 
     def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int,
                       show_path: bool) -> dict[str, str]:
@@ -151,7 +126,6 @@ class Cell:
                 left_center["center_is_way_out"] = self.center_is_way_out
             else:
                 left_center["center_is_way_out"] = "   "
-        # elif self.is_way_out:  # **** can be conditionned
         else:
             left_center["center"] = self.center
 
@@ -169,12 +143,6 @@ def maze_creator(height: int, width: int) -> list[list[Cell]]:
     return maze
 
 
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -222,7 +190,6 @@ def way_maker(maze: list[list[Cell]], data: Config,
     """
     # List the breakables walls.
     directions = []
-    # print(len(maze[y]))  # ****
     if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1:
         directions.append("north")
     if (x < (data.width - 1) and maze[y][x + 1].is_ft != 1 and
@@ -262,20 +229,16 @@ def way_maker(maze: list[list[Cell]], data: Config,
     return []
 
 
-def maze_checker(maze: list[list[Cell]],
-                 data: Config) -> int:  # , path[-1][0], path[-1][1] ****
+def maze_checker(maze: list[list[Cell]]) -> int:
     """Check for any unopened cell, can return the total."""
     total: int = 0
     for y in range(len(maze)):
         for x in range(len(maze[y])):
-            # print("x =", x, "y =", y)  # ****
-            # print("WIDTH HEIGHT", data["WIDTH"], data["HEIGHT"])
             if maze[y][x].is_visited == 0:
                 total += 1
     return int(total)
 
 
-# **** faire en sort que si il tombe sur exit il revienne en arriere
 def wanderer(maze: list[list[Cell]], loc: list[int],
              data: Config) -> None:
     """Explore the maze and create valid paths.
@@ -288,7 +251,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
     path: list[list[int]] = [loc]
     path_found: bool = False
 
-    while maze_checker(maze, data):  # , path[-1][0], path[-1][1] ****
+    while maze_checker(maze):
         try:
             new_loc: list[int] = way_maker(maze, data,
                                            path[-1][0], path[-1][1])
@@ -300,7 +263,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
         if (
            maze[new_loc[1]][new_loc[0]].is_exit
            and data.perfect and path_found == 0):
-            ariane_string(maze, path, data)
+            ariane_string(maze, path)
             data.path = path.copy()
             data.path.append(new_loc)
             path_found = True
@@ -311,39 +274,13 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
 
         # If wanderer did not move, it is stuck, so it remove the last.
         # position and restart from the new last location on the list.
-        # print("MAZE LOC", maze[new_loc[1]][new_loc[0]].is_exit)  # ****
         if not maze[new_loc[1]][new_loc[0]].is_exit:
-            # print("backtrack")  # ****
             if new_loc == path[-1]:
                 path.pop()
             else:
                 path.append(new_loc)
 
 
-# def main() -> None:
-#     from maze_map import maze_creator
-#     from get_config import get_config
-#     from role_atribution import atributor_exit, atributor_start, fourtier
-
-#     data = get_config("config.txt")
-#     maze = maze_creator(data.height, data.width)
-
-#     fourtier(maze, data.height, data.width)
-#     atributor_start(maze, data.entry)
-#     atributor_exit(maze, data.exit)
-#     print("END REACHED")
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -391,7 +328,6 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
                     raise ValueError("Overlaping roles: Entry and 42")
                 if maze[start_v + x][start_o + y].is_exit:
                     raise ValueError("Overlaping roles: Exit and 42")
-                # **** may cause a mypy error later
                 maze[start_v + x][start_o + y].is_ft = bool(int(logo[x][y]))
                 maze[start_v + x][start_o + y].is_visited = bool(
                     int(logo[x][y]))
@@ -400,8 +336,7 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
         sys.exit()
 
 
-def ariane_string(maze: list[list[Cell]], the_way: list[list[int]],
-                  config: Config):
+def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
     """Create the exit way
 
     Take the list of coordinates leading to the exit and change the atribute
@@ -410,72 +345,6 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]],
         maze[y][x].is_way_out = True
 
 
-# ****
-"""def direction_instruction(Config: Config) -> str:
-    path_instructions: str = ""
-
-    for x in range(len(Config.path) - 1):
-        if path_instructions[x][0] > path_instructions[x + 1][0]:
-            path_instructions += "E"
-        if path_instructions[x][0] > path_instructions[x - 1][0]:
-            path_instructions += "W"
-        if path_instructions[x][1] > path_instructions[x + 1][1]:
-            path_instructions += "S"
-        if path_instructions[x][1] > path_instructions[x - 1][1]:
-            path_instructions += "N"
-
-    return path_instructions"""
-
-
-# def main() -> None:
-#     from get_config import get_config
-#     a = get_config("config.txt")
-#     a = a
-#     width = 12
-#     height = 12
-#     start = [1, 2]
-#     exit = [9, 10]
-
-#     maze = maze_creator(height, width)
-#     fourtier(maze, height, width)
-#     atributor_start(maze, start)
-#     atributor_exit(maze, exit)
-
-#     for x in range(height):
-#         for y in range(width):
-#             if maze[x][y].is_ft == 1:
-#                 print("XXXX", sep="", end="")
-#             else:
-#                 print(maze[x][y].upper_closed, sep="", end="")
-#         print("o\n", end="")
-
-#         for y in range(width):
-#             if maze[x][y].is_ft == 1:
-#                 print("0000", sep="", end="")
-#             elif maze[x][y].is_start == 1:
-#                 print("0SSS", sep="", end="")
-#             elif maze[x][y].is_exit == 1:
-#                 print("0EEE", sep="", end="")
-#             else:
-#                 print(maze[x][y].left_closed, sep="", end="")
-#         print("0\n", end="")
-
-#     print("oooo" * width, "o\n", sep="", end="")
-
-#     print("Hexa =", maze[0][0].get_hexa())
-#     print("Total wall =", maze[0][0].get_wallnumber())
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -526,12 +395,7 @@ def generate_output_file(
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 # break the wall semi randomly to make it imperfect
 # It works
@@ -636,17 +500,14 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
                 # following the same group of forks *** may actually be useless
                 directions.pop()
                 continue
-            # print("HERE", c)  # ****
             # list all the forks
             directions = open_door(maze, data, c[-1][0], c[-1][1])
             if not directions:
                 continue
 
-            # print(c)  # ****
             # print("Direction", directions)
             # create the new list while adding the directions
             while len(directions):
-                # print("here z")  # ****
                 new_way: list[list[int]] = [p[:] for p in c]
                 if directions[-1] == "north":
                     maze[new_way[-1][1] - 1][new_way[-1][0]].is_visited = True
@@ -666,66 +527,19 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
         while len(work_flow):
             work_flow.pop()
         while len(new_branch):
-            # print("ddddddddddddddddddddddddddddddddddddddddddddd")  # ****
             work_flow.append(new_branch[-1])
             new_branch.pop()
             # optimisation possible: si aucun chemin dispo et pas sur exit:
             # efface le chemin. Ca permet de trier les dead end pour
             # economiser des passages
         for c in work_flow:
-            # print("YYYYYYYYYYY")  # ****
-            # print(c[-1][1], c[-1][0], "HHHHHHHHHHHHHHHHHHH")  # ****
             if maze[c[-1][1]][c[-1][0]].is_exit and path_found == 0:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
-                ariane_string(maze, c, data)
+                ariane_string(maze, c)
                 data.path = c.copy()
                 # data.path.append([c[-1][1]], [c[-1][0]])
                 path_found = True
 
-
-"""
-def way_maker(maze: list[list[Cell]], data: dict[str, bool | str | int | list],
-              x: int, y: int) -> list[int]:
-    # List the breakables walls.
-    directions = []
-    if y != 0 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1:
-        directions.append("north")
-    if (x < (data["WIDTH"] - 1) and maze[y][x + 1].is_ft != 1 and
-            maze[y][x + 1].is_visited != 1):
-        directions.append("east")
-    if (y < (data["HEIGHT"] - 1) and maze[y + 1][x].is_ft != 1 and
-            maze[y + 1][x].is_visited != 1):
-        directions.append("south")
-    if x != 0 and maze[y][x - 1].is_ft != 1 and maze[y][x - 1].is_visited != 1:
-        directions.append("west")
-
-    # Security for unsolvable maze.
-    try:
-        if len(directions) == 0 and maze[y][x].is_start:
-            raise ValueError("Error, unsolvable maze")
-    except ValueError as err:
-        print(err)
-        sys.exit()
-
-    # If no wall can be broken return the actual position.
-    if len(directions) == 0:
-        return [x, y]
-
-    # Take the list of breakable walls, chose one, send it to the breaking.
-    chosen: str = random.choice(directions)
-    print(chosen)  # ****
-    wall_breaker(maze, x, y, chosen)
-
-    # Return the new adress.
-    if chosen == "north":
-        return [x, y - 1]
-    if chosen == "east":
-        return [x + 1, y]
-    if chosen == "south":
-        return [x, y + 1]
-    if chosen == "west":
-        return [x - 1, y]
-"""
 
 # if __name__ == "__main__":
 #     main()
