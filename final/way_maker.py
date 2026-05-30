@@ -128,6 +128,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
            and data.perfect and path_found == 0):
             ariane_string(maze, path, data)
             data.path = path.copy()
+            data.path.append(new_loc)
             path_found == 1
 
         # Roll back if exit is found.

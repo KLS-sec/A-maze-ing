@@ -150,6 +150,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
                 maze[c[-1][1]][c[-1][0]].is_visited = True
                 ariane_string(maze, c, data)
                 data.path = c.copy()
+                # data.path.append([c[-1][1]], [c[-1][0]])
                 path_found == 1
 
 

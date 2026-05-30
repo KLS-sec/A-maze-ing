@@ -5,6 +5,7 @@ from maze_map import maze_creator, Cell
 from role_atribution import atributor_start, atributor_exit, fourtier
 from way_maker import wanderer
 from get_config import get_config, Config
+import imperfect_maze
 
 init(autoreset=True)  # reset de couleurs
 
@@ -96,6 +97,9 @@ def gen_maze(data: Config) -> list[list[Cell]]:
     atributor_start(maze, data.entry)
     atributor_exit(maze, data.exit)
     wanderer(maze, data.entry, data)
+    if not data.perfect:
+        imperfect_maze.imperfect_maker(maze, data)
+        imperfect_maze.imperfect_solver(maze, data)
     return maze
 
 
