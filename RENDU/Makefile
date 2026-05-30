@@ -1,21 +1,21 @@
 NAME=a_maze_ing.py
-TEST=print_term.py
 CONFIG=config.txt
 
-all: ${TEST}
+all: ${NAME}
 
 install:
-	pip install pydantic colorama type-colorama flake8 mypy
+	pip install pydantic colorama types-colorama flake8 mypy
 
 run:
-	python3 ${TEST} ${CONFIG}
+	python3 ${NAME} ${CONFIG}
 
 debug:
-	python3 -m pdb ${TEST} ${CONFIG}
+	python3 -m pdb ${NAME} ${CONFIG}
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	rm -rf output_maze.txt
 
 lint:
 	python3 -m flake8 .
