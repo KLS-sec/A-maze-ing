@@ -1,5 +1,6 @@
 from colorama import Fore, Style, init
 import os
+import sys
 import outputfile
 from maze_map import maze_creator, Cell
 from role_atribution import atributor_start, atributor_exit, fourtier
@@ -104,10 +105,10 @@ def gen_maze(data: Config) -> list[list[Cell]]:
 
 
 # interface ancien
-def ui() -> None:
+def ui(filename: str) -> None:
     show_path = True
     color_ind = 0
-    data = get_config("config.txt")
+    data = get_config(filename)
     mazegen = gen_maze(data)
     outputfile.generate_output_file(data.output_file, mazegen, data.entry,
                                     data.exit, data.path)
@@ -139,6 +140,14 @@ def ui() -> None:
         print("\nKeyboard interrupt, Quitting...")
 
 
-if __name__ == "__main__":
+def main():
+    if len(sys.argv) == 2:
+        file = sys.argv[1]
+        ui(file)
+    else:
+        raise Exception("Incorrect arguments, "
+                        "expected : python3 print_term 'config file'")
 
-    ui()
+
+if __name__ == "__main__":
+    main()

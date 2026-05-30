@@ -64,7 +64,7 @@ def get_config(filename: str) -> Config:
     """
     config = Config()
     try:
-        with open("config.txt", "r") as a:
+        with open(filename, "r") as a:
             for line in a:
                 line = line.strip()
                 if not line:
