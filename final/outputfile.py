@@ -31,23 +31,14 @@ def generate_output_file(
 ) -> None:
 
     with open(filename, "w") as f:
-        f.write("=== A-Maze-ing Output File ===\n\n")
-
-        f.write("[MAZE]\n")
         for row in maze:
             # conversion en hexa par cellule pour chaque ligne ("X" = maj "x" = min)
             line = "".join(str(cell.get_hexa()) for cell in row)
             f.write(line + "\n")
 
-        f.write("\n[ENTRY]\n")
-        f.write(f"x={entry[0]}\n")
-        f.write(f"y={entry[1]}\n\n")
+        f.write(f"\n{entry[0]},{entry[1]}\n")
 
-        f.write("[EXIT]\n")
-        f.write(f"x={exit[0]}\n")
-        f.write(f"y={exit[1]}\n\n")
+        f.write(f"{exit[0]},{exit[1]}\n")
 
-        f.write("\n[SOLUTION]\n")
         # conversion du path en N-S-E-W
         f.write(coords_to_direction(solution_path) + "\n")
-        f.write("\n[END]\n")
