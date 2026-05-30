@@ -112,6 +112,7 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
     maze.
     """
     path: list[list[int]] = [loc]
+    path_found: bool = 0
 
     while maze_checker(maze, data):  # , path[-1][0], path[-1][1] ****
         try:
@@ -122,9 +123,12 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
             sys.exit()
 
         # Create the perfect way, only for perfect path.
-        if maze[new_loc[1]][new_loc[0]].is_exit and data.perfect:
+        if (
+           maze[new_loc[1]][new_loc[0]].is_exit
+           and data.perfect and path_found == 0):
             ariane_string(maze, path, data)
-            Config.path = path
+            data.path = path.copy()
+            path_found == 1
 
         # Roll back if exit is found.
         if maze[new_loc[1]][new_loc[0]].is_exit:

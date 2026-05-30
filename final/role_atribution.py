@@ -64,8 +64,23 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]],
     is_way_out"""
     for x, y in the_way:
         maze[y][x].is_way_out = True
-    outputfile.generate_output_file(config.output_file, maze, config.entry,
-                                    config.exit, the_way)
+
+
+# ****
+"""def direction_instruction(Config: Config) -> str:
+    path_instructions: str = ""
+
+    for x in range(len(Config.path) - 1):
+        if path_instructions[x][0] > path_instructions[x + 1][0]:
+            path_instructions += "E"
+        if path_instructions[x][0] > path_instructions[x - 1][0]:
+            path_instructions += "W"
+        if path_instructions[x][1] > path_instructions[x + 1][1]:
+            path_instructions += "S"
+        if path_instructions[x][1] > path_instructions[x - 1][1]:
+            path_instructions += "N"
+
+    return path_instructions"""
 
 
 def main() -> None:

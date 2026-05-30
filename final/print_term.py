@@ -1,7 +1,10 @@
 from colorama import Fore, Style, init
 import os
-from maze_map import Cell
-
+import outputfile
+from maze_map import maze_creator, Cell
+from role_atribution import atributor_start, atributor_exit, fourtier
+from way_maker import wanderer
+from get_config import get_config, Config
 
 init(autoreset=True)  # reset de couleurs
 
@@ -81,15 +84,11 @@ def color_map(maze: list[list[Cell]], height: int, width: int,
 def render(maze: list[list[Cell]], height: int, width: int,
            color_ind: int, show_path: bool) -> None:
     if maze:
-        os.system("cls" if os.name == "nt" else "clear")
+        os.system("cls" if os.name == "nt" else "clear")  # ****
         color_map(maze, height, width, color_ind, show_path)
 
 
-def gen_maze() -> list[list[Cell]]:
-    from maze_map import maze_creator
-    from role_atribution import atributor_start, atributor_exit, fourtier
-    from way_maker import wanderer
-    from get_config import get_config
+def gen_maze() -> list[list[list[Cell]], Config]:
 
     data = get_config("config.txt")
     maze = maze_creator(data.height, data.width)
@@ -97,15 +96,17 @@ def gen_maze() -> list[list[Cell]]:
     atributor_start(maze, data.entry)
     atributor_exit(maze, data.exit)
     wanderer(maze, data.entry, data)
-    return maze
+    return [maze, data]
 
 
 # interface ancien
-def ui(height: int, width: int) -> None:
+def ui() -> None:
     show_path = True
     color_ind = 0
-    mazegen = gen_maze()
-    render(mazegen, height, width, color_ind, show_path)
+    mazegen, data = gen_maze()
+    outputfile.generate_output_file(data.output_file, mazegen, data.entry,
+                                    data.exit, data.path)
+    render(mazegen, data.height, data.width, color_ind, show_path)
     txt = ("=== a-maze-ing ===\n"
            "1. Re-generate a new maze\n"
            "2. Show/Hide path from entry to exit\n"
@@ -117,16 +118,16 @@ def ui(height: int, width: int) -> None:
         while param != "4":
             if param == "1":
                 mazegen = gen_maze()
-                render(mazegen, height, width, color_ind, show_path)
+                render(mazegen, data.height, data.width, color_ind, show_path)
             elif param == "2":
                 show_path = not show_path
-                render(mazegen, height, width, color_ind, show_path)
+                render(mazegen, data.height, data.width, color_ind, show_path)
             elif param == "3":
                 color_ind = rotate_colors(color_ind)
-                render(mazegen, height, width, color_ind, show_path)
+                render(mazegen, data.height, data.width, color_ind, show_path)
             else:
                 mazegen = gen_maze()
-                render(mazegen, height, width, color_ind, show_path)
+                render(mazegen, data.height, data.width, color_ind, show_path)
             print(txt)
             param = input("Choice? (1-4): ").strip()
     except KeyboardInterrupt:
@@ -134,7 +135,5 @@ def ui(height: int, width: int) -> None:
 
 
 if __name__ == "__main__":
-    from get_config import get_config
 
-    data = get_config("config.txt")
-    ui(data.height, data.width)
+    ui()

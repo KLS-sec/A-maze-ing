@@ -3,7 +3,7 @@ from maze_map import Cell
 
 
 # conversion du path en N-S-E-W
-def coords_to_direction(path: List[Tuple[int, int]]) -> str:
+def coords_to_direction(path: List[list[int]]) -> str:
     directions = []
 
     for i in range(1, len(path)):
@@ -11,13 +11,13 @@ def coords_to_direction(path: List[Tuple[int, int]]) -> str:
         x2, y2 = path[i]
 
         if x2 == x1 - 1:
-            directions.append("N")
-        elif x2 == x1 + 1:
-            directions.append("S")
-        elif y2 == y1 - 1:
             directions.append("W")
-        elif y2 == y1 + 1:
+        elif x2 == x1 + 1:
             directions.append("E")
+        elif y2 == y1 - 1:
+            directions.append("N")
+        elif y2 == y1 + 1:
+            directions.append("S")
 
     return "".join(directions)
 
@@ -39,7 +39,7 @@ def generate_output_file(
             line = "".join(str(cell.get_hexa()) for cell in row)
             f.write(line + "\n")
 
-        f.write("[ENTRY]\n")
+        f.write("\n[ENTRY]\n")
         f.write(f"x={entry[0]}\n")
         f.write(f"y={entry[1]}\n\n")
 

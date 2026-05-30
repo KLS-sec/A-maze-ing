@@ -82,7 +82,7 @@ def open_door(maze: list[list[Cell]],
 # faire un systeme avec une liste de sauvegarde, une liste en cours
 # d usage et une liste a rajouter?
 def imperfect_solver(maze: list[list[Cell]], data: Config):
-
+    path_found: bool = 0
     # reset the visited status
     for a in range(data.height):
         for b in range(data.width):
@@ -146,12 +146,11 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
         for c in work_flow:
             # print("YYYYYYYYYYY")  # ****
             # print(c[-1][1], c[-1][0], "HHHHHHHHHHHHHHHHHHH")  # ****
-            if maze[c[-1][1]][c[-1][0]].is_exit:
+            if maze[c[-1][1]][c[-1][0]].is_exit and path_found == 0:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
                 ariane_string(maze, c, data)
-                Config.path = c
-                print("HERE Y")  # ****
-        print("HERE X")  # ****
+                data.path = c.copy()
+                path_found == 1
 
 
 """
