@@ -8,7 +8,6 @@ import sys
 from maze_generator import generator
 from maze_generator.generator import MazeGenerator
 from config_parsing import get_config
-import random
 
 
 # Automatically reset terminal colors after each print.
@@ -51,17 +50,13 @@ def rotate_colors(index: int) -> int:
     return (index + 1) % len(COLOR_SCHEMES)
 
 
-def color_map(
-    maze: list[list[generator.Cell]],
-    height: int,
-    width: int,
-    color_ind: int,
-    show_path: bool,
-) -> None:
+def color_map(maze: list[list[generator.Cell]], height: int, width: int,
+              color_ind: int, show_path: bool) -> None:
     """Display the maze using the selected color scheme."""
     colors = get_colors(color_ind)
 
     def _colorize(key: str) -> str:
+        # **** mma
         if (
             key == "upper_is_ft"
             or key == "upper_left_is_ft"
@@ -76,28 +71,18 @@ def color_map(
         return colors["wall"]
 
     for y in range(height):
-
         # Render upper walls.
         for x in range(width):
             cell = maze[y][x]
             lst_walls: dict[str, str] = cell.get_upper_wall(
-                maze,
-                x,
-                y,
-                show_path,
-            )
-
+                maze, x, y, show_path)
             for keys in lst_walls.keys():
                 if keys == "upper_is_way_out" and show_path:
-                    print(
-                        colors["path"] + lst_walls[keys] + Style.RESET_ALL,
-                        end="",
-                    )
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
                 else:
-                    print(
-                        _colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
-                        end="",
-                    )
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
 
         print(colors["wall"] + "o" + Style.RESET_ALL)
 
@@ -108,31 +93,20 @@ def color_map(
 
             for keys in lst_walls.keys():
                 if (
-                    keys == "left_is_way_out"
-                    or keys == "center_is_way_out"
-                ) and show_path:
-                    print(
-                        colors["path"] + lst_walls[keys] + Style.RESET_ALL,
-                        end="",
-                    )
+                    (keys == "left_is_way_out" or
+                     keys == "center_is_way_out") and show_path
+                ):
+                    print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
                 else:
-                    print(
-                        _colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
-                        end="",
-                    )
-
+                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                          end="")
         print(colors["wall"] + "o" + Style.RESET_ALL)
-
     print(colors["wall"] + "oooo" * width + "o" + Style.RESET_ALL)
 
 
-def render(
-    maze: list[list[generator.Cell]],
-    height: int,
-    width: int,
-    color_ind: int,
-    show_path: bool,
-) -> None:
+def render(maze: list[list[generator.Cell]], height: int, width: int,
+           color_ind: int, show_path: bool) -> None:
     """Clear the terminal and display the maze."""
 
     if maze:
@@ -140,9 +114,7 @@ def render(
         color_map(maze, height, width, color_ind, show_path)
 
 
-def gen_maze(
-    mazegen: MazeGenerator,
-) -> list[list[generator.Cell]]:
+def gen_maze(mazegen: MazeGenerator) -> list[list[generator.Cell]]:
     """Generate and solve a maze."""
 
     map = mazegen.generate()
@@ -152,6 +124,7 @@ def gen_maze(
 
 
 def coords_to_direction(path: list[list[int]]) -> str:
+    """Generate the solution path."""
     directions = []
 
     for i in range(1, len(path)):
@@ -170,14 +143,10 @@ def coords_to_direction(path: list[list[int]]) -> str:
     return "".join(directions)
 
 
-def generate_output_file(
-    filename: str,
-    maze: list[list[generator.Cell]],  # la map de maze_map
-    entry: list[int],
-    exit: list[int],
-    solution_path: list[list[int]]
-) -> None:
-
+def generate_output_file(filename: str, maze: list[list[generator.Cell]],
+                         entry: list[int], exit: list[int],
+                         solution_path: list[list[int]]) -> None:
+    """Generate the output file for the tester."""
     with open(filename, "w") as f:
         for row in maze:
             # conversion en hexa par cellule pour chaque ligne
@@ -201,8 +170,6 @@ def ui(filename: str) -> None:
     color_ind = 0
 
     data = get_config(filename)
-    if data.seed:
-        random.seed(data.seed)
     map = MazeGenerator(data)
     mazegen = gen_maze(map)
 
@@ -237,12 +204,9 @@ def ui(filename: str) -> None:
 
     try:
         param = input("Choice? (1-4): ").strip()
-
         while param != "4":
-
             if param == "1":
                 mazegen = gen_maze(map)
-
                 generate_output_file(
                     data.output_file,
                     mazegen,
@@ -250,7 +214,6 @@ def ui(filename: str) -> None:
                     data.exit,
                     data.path,
                 )
-
                 render(
                     mazegen,
                     data.height,
@@ -258,10 +221,8 @@ def ui(filename: str) -> None:
                     color_ind,
                     show_path,
                 )
-
             elif param == "2":
                 show_path = not show_path
-
                 render(
                     mazegen,
                     data.height,
@@ -269,10 +230,8 @@ def ui(filename: str) -> None:
                     color_ind,
                     show_path,
                 )
-
             elif param == "3":
                 color_ind = rotate_colors(color_ind)
-
                 render(
                     mazegen,
                     data.height,
@@ -280,10 +239,8 @@ def ui(filename: str) -> None:
                     color_ind,
                     show_path,
                 )
-
             else:
                 mazegen = gen_maze(map)
-
                 generate_output_file(
                     data.output_file,
                     mazegen,
@@ -291,7 +248,6 @@ def ui(filename: str) -> None:
                     data.exit,
                     data.path,
                 )
-
                 render(
                     mazegen,
                     data.height,
@@ -299,15 +255,13 @@ def ui(filename: str) -> None:
                     color_ind,
                     show_path,
                 )
-
             print(txt)
             param = input("Choice? (1-4): ").strip()
-
     except KeyboardInterrupt:
         print("\nKeyboard interrupt, Quitting...")
 
 
-def main():
+def main() -> None:
     """Parse command-line arguments and start the user interface."""
 
     if len(sys.argv) == 2:

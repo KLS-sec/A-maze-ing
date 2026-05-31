@@ -52,19 +52,19 @@ class Cell:
     west: bool = True
 
     def get_hexa(self) -> str:
-        # Return the hexadecimal value.
+        """Return the hexadecimal value."""
         return format(
             self.north * 1 + self.east * 2 + self.south * 4 + self.west * 8,
             "X"
         )
 
     def get_wallnumber(self) -> int:
-        # Return the number of closed wall for the imperfect maze.
+        """Return the number of closed wall for the imperfect maze."""
         return (self.north + self.east + self.south + self.west)
 
     def get_upper_wall(self, maze: list[list["Cell"]], x: int, y: int,
                        show_path: bool) -> dict[str, str]:
-        # Return the upper wall to print depending on the cell location.
+        """Return the upper wall to print depending on the cell location."""
         upper_wall = {}
         # upper-left
         # ft
@@ -96,7 +96,7 @@ class Cell:
 
     def get_left_wall(self, maze: list[list["Cell"]], x: int, y: int,
                       show_path: bool) -> dict[str, str]:
-        # Return the left wall to print depending on the cell location.
+        """Return the left wall to print depending on the cell location."""
         left_center = {}
         # left
         if self.is_ft or maze[y][x - 1].is_ft:
@@ -287,13 +287,13 @@ def wanderer(maze: list[list[Cell]], loc: list[int],
 
 
 def atributor_start(maze: list[list[Cell]], start: list[int]) -> None:
-    """Create the entry"""
+    """Create the entry."""
     maze[(start[1])][(start[0])].is_start = True
     maze[(start[1])][(start[0])].is_way_out = True
 
 
 def atributor_exit(maze: list[list[Cell]], exit: list[int]) -> None:
-    """Create the exit and check overlapping with the entry"""
+    """Create the exit and check overlapping with the entry."""
     try:
         maze[exit[1]][exit[0]].is_exit = True
         maze[exit[1]][exit[0]].is_way_out = True
@@ -335,11 +335,12 @@ def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
         sys.exit()
 
 
-def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
-    """Create the exit way
+def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]) -> None:
+    """Create the exit way.
 
     Take the list of coordinates leading to the exit and change the atribute
-    is_way_out"""
+    is_way_out.
+    """
     for x, y in the_way:
         maze[y][x].is_way_out = True
 
@@ -353,7 +354,17 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]):
 # break the wall semi randomly to make it imperfect
 # It works
 def imperfect_maker(maze: list[list[Cell]],
-                    data: Config):
+                    data: Config) -> None:
+    """Break the wall semi randomly to make it imperfect.
+
+    Go in each cell, one by one, list the breakable wall. Chose one randomly.
+    If there are 3 walls:
+    Select one randomly and break it.
+
+    If there are 2 walls:
+    Start another random generation and depending on the result it will
+    break this wall or leave it untouched.
+    """
     for y in range(len(maze)):
         for x in range(len(maze[y])):
             if maze[y][x].get_wallnumber() > 2:
@@ -396,9 +407,9 @@ def imperfect_maker(maze: list[list[Cell]],
                         wall_breaker(maze, x, y, chosen2)
 
 
-# Filter the breakable wall
 def open_door(maze: list[list[Cell]],
-              data: Config, x: int, y: int):
+              data: Config, x: int, y: int) -> list[str]:
+    """Filter the breakable wall, store them in directions and return it."""
     directions = []
     if y >= 1 and maze[y - 1][x].is_ft != 1 and maze[y - 1][x].is_visited != 1\
             and maze[y][x].north != 1:
@@ -424,7 +435,18 @@ def open_door(maze: list[list[Cell]],
 # refaire de zero
 # faire un systeme avec une liste de sauvegarde, une liste en cours
 # d usage et une liste a rajouter?
-def imperfect_solver(maze: list[list[Cell]], data: Config):
+def imperfect_solver(maze: list[list[Cell]], data: Config) -> None:
+    """Use the flood method to solve the imperfect maze.
+
+    Generate a 'path' (list[str]) stored in a list[list[str]]starting at the
+    entry point.
+    List all the different possible directions. Create copie of the path being
+    used at the moment in another list of list and append the coordinates of
+    the differents direction on them.
+    Once all the listed 'path' have been used it will update the list of 'path'
+    with all the new ones created during the iteration and start searching
+    again.
+    """
     path_found: bool = False
     # reset the visited status
     for a in range(data.height):
@@ -432,19 +454,13 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
             if not maze[a][b].is_ft:
                 maze[a][b].is_visited = False
 
-    # list all the diferent ways
+    # store all the diferent path
     work_flow: list[list[list[int]]] = [[list(data.entry)]]
 
     # set entry as visited
     maze[data.entry[1]][data.entry[0]].is_visited = True
 
-    # Utilise direction comme un compteur, je le vide pour eviter d allonger
-    # en boucle le meme lot de cheminsd.
-    # Si j ajoute NSE, alors ca vas creer les chemins SE et il vas attaquer le
-    # chemin S au coup suivant,
-    # Je veut eviter ca pour ne pas avoir une meduse mono directionnelle qui
-    # englobe tout en forme d escargot
-    # continue until exit is set a visited
+    # main part, explore, store and update the different path
     while maze[data.exit[1]][data.exit[0]].is_visited == 0:
         new_branch: list[list[list[int]]] = []
         for c in work_flow:  # cycle through all the ways
@@ -477,14 +493,16 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
                 new_branch.append(new_way)
                 directions.pop()
 
+        # empty the outdated path
         while len(work_flow):
             work_flow.pop()
+
+        # fill in with the new path to explore
         while len(new_branch):
             work_flow.append(new_branch[-1])
             new_branch.pop()
-            # optimisation possible: si aucun chemin dispo et pas sur exit:
-            # efface le chemin. Ca permet de trier les dead end pour
-            # economiser des passages
+
+        # If a path reach the end, use it with ariane string, kill the function
         for c in work_flow:
             if maze[c[-1][1]][c[-1][0]].is_exit and path_found == 0:
                 maze[c[-1][1]][c[-1][0]].is_visited = True
@@ -495,6 +513,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config):
 
 
 class MazeGenerator:
+    """**** completer par mma"""
     def __init__(self, config: Config):
         self.config = config
 
