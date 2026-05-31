@@ -8,6 +8,7 @@ import sys
 from maze_generator import generator
 from maze_generator.generator import MazeGenerator
 from config_parsing import get_config
+import random
 
 
 # Automatically reset terminal colors after each print.
@@ -149,6 +150,7 @@ def gen_maze(
 
     return maze
 
+
 def coords_to_direction(path: list[list[int]]) -> str:
     directions = []
 
@@ -199,6 +201,8 @@ def ui(filename: str) -> None:
     color_ind = 0
 
     data = get_config(filename)
+    if data.seed:
+        random.seed(data.seed)
     map = MazeGenerator(data)
     mazegen = gen_maze(map)
 

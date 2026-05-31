@@ -11,7 +11,7 @@ class Config:
     exit: list[int]
     output_file: str = "output_maze.txt"
     perfect: bool = True
-    seed: bool = False
+    seed: str = "False"
     path: list[list[int]]
 
 
@@ -145,10 +145,10 @@ def get_config(filename: str) -> Config:
                         )
 
                 if key == "SEED":
-                    if value == "True":
-                        config.seed = True
-                    elif value == "False":
-                        config.seed = False
+                    if value == "False":
+                        config.seed = "False"
+                    else:
+                        config.seed = value
 
         try:
             tester = config_storage(

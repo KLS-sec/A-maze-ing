@@ -1,0 +1,5 @@
+__pycache__
+.mypy_cache
+venv
+maze_generator/__pycache__
+maze_generator/.mypy_cache

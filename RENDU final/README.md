@@ -42,7 +42,7 @@ in "config.txt":
     - OUTPUT_FILE=<string>
     - PERFECT=True/False
 optional parameter:
-    - SEED=<int>
+    - SEED=<str>
 ```
 
 ## Project Management
@@ -74,7 +74,7 @@ Chosen for it's simplicity of use and the ability to solve any kind of maze. It 
         config data (class Config): where Config includes :
 			- width (int): The width of the maze. Must be greater or equal to 2
 			- height (int): The hight of the maze. Must be greater or equal to 2
-			- seed (int): The seed of the maze
+			- seed (str): The seed of the maze
 			- entry (list[int]): A couple of coordinates that represent the entrance of the maze
 			- exit (list[int]): A couple of coordinates that represent
 				the entrance of the maze
