@@ -65,8 +65,40 @@ Chosen because it allow a control over the wall density and avoid any dead-end.
 Starting from the entry cell a line will grow, when a crossway is detected the line is copied and both will follow a different path. Every path will grow at the same time, like flooding the maze from the entry point. When one of the lines touche the exit it is detected as the shortest path and call the "ariane_string" function just like the perfect maze
 Chosen for it's simplicity of use and the ability to solve any kind of maze. It present a weekness of being slow and ressource demanding on massive maze, but it could be optimized by eraising lines reaching a dead-end
 
-• What part of your code is reusable, and how.
+## Reusable part
+- ### MazeGenerator class
 
+    This class handle the generation of the maze from a seed, including the 42 logo.
+```python
+    Attributes:
+        config data (class Config): where Config includes :
+			- width (int): The width of the maze. Must be greater or equal to 2
+			- height (int): The hight of the maze. Must be greater or equal to 2
+			- seed (int): The seed of the maze
+			- entry (list[int]): A couple of coordinates that represent the entrance of the maze
+			- exit (list[int]): A couple of coordinates that represent
+				the entrance of the maze
+			- output_file (str): the name of the generated output_file
+			- perfect (bool): create multiple/one way(s) to finish the maze
+			- path (list[list[int]]): the path to get to the end
+
+	Methods:
+		generate() -> list[list[Cell]]: generate a maze randomly
+    	solve() -> list[list[Cell]]: solve maze
+```
+
+- ### Output generation system
+```python
+    Generate the hexadecimal view of the maze,
+    the coordinates of the entrance and exit
+    and the path from the entrance to the exit
+
+    Arguments:
+        filename (str): The path to the config file
+        maze (MazeGenerator): The binary representation of the maze
+        entry (tuple[int, int]): The coordinates of the entry
+        exit (tuple[int, int]): The coordinates of the exit
+```
 
 ### Task Allocation
 
