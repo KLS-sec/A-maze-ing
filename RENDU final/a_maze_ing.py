@@ -40,7 +40,7 @@ COLOR_SCHEMES = [
 ]
 
 
-def get_colors(index: int) -> dict:
+def get_colors(index: int) -> dict[str, str]:
     """Return the color scheme associated with the given index."""
     return COLOR_SCHEMES[index]
 
@@ -55,8 +55,8 @@ def color_map(maze: list[list[generator.Cell]], height: int, width: int,
     """Display the maze using the selected color scheme."""
     colors = get_colors(color_ind)
 
-    def _colorize(key: str) -> str:
-        # **** mma
+    def colorize(key: str) -> str:
+        """Return a color depending on the Cell"""
         if (
             key == "upper_is_ft"
             or key == "upper_left_is_ft"
@@ -81,7 +81,7 @@ def color_map(maze: list[list[generator.Cell]], height: int, width: int,
                     print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
                           end="")
                 else:
-                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                    print(colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
                           end="")
 
         print(colors["wall"] + "o" + Style.RESET_ALL)
@@ -99,7 +99,7 @@ def color_map(maze: list[list[generator.Cell]], height: int, width: int,
                     print(colors["path"] + lst_walls[keys] + Style.RESET_ALL,
                           end="")
                 else:
-                    print(_colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
+                    print(colorize(keys) + lst_walls[keys] + Style.RESET_ALL,
                           end="")
         print(colors["wall"] + "o" + Style.RESET_ALL)
     print(colors["wall"] + "oooo" * width + "o" + Style.RESET_ALL)
@@ -115,7 +115,7 @@ def render(maze: list[list[generator.Cell]], height: int, width: int,
 
 
 def gen_maze(mazegen: MazeGenerator) -> list[list[generator.Cell]]:
-    """Generate and solve a maze."""
+    """Return a generated and solved maze."""
 
     map = mazegen.generate()
     maze = mazegen.solve(map)
@@ -124,7 +124,7 @@ def gen_maze(mazegen: MazeGenerator) -> list[list[generator.Cell]]:
 
 
 def coords_to_direction(path: list[list[int]]) -> str:
-    """Generate the solution path."""
+    """Generate the solution path for the output file."""
     directions = []
 
     for i in range(1, len(path)):
@@ -146,15 +146,15 @@ def coords_to_direction(path: list[list[int]]) -> str:
 def generate_output_file(filename: str, maze: list[list[generator.Cell]],
                          entry: list[int], exit: list[int],
                          solution_path: list[list[int]]) -> None:
-    """Generate the output file for the tester."""
+    """Generate the output file for the maze."""
     with open(filename, "w") as f:
         for row in maze:
-            # conversion en hexa par cellule pour chaque ligne
+            # convert in hexa for each Cell in the row
             line = "".join(cell.get_hexa() for cell in row)
             f.write(line + "\n")
         f.write(f"\n{entry[0]},{entry[1]}\n")
         f.write(f"{exit[0]},{exit[1]}\n")
-        # conversion du path en N-S-E-W
+        # convert path into cardinal points
         f.write(coords_to_direction(solution_path) + "\n")
 
 

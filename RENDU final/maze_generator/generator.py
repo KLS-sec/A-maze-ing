@@ -433,7 +433,7 @@ def open_door(maze: list[list[Cell]],
 
 
 # refaire de zero
-# faire un systeme avec une liste de sauvegarde, une liste en cours
+# faire un systeme avec une liste de sauvegarde, une liste en cours ´´´´´´´´´´´´´´´´´´´´´´´
 # d usage et une liste a rajouter?
 def imperfect_solver(maze: list[list[Cell]], data: Config) -> None:
     """Use the flood method to solve the imperfect maze.
