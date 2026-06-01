@@ -10,7 +10,7 @@ class Config:
     height: int = 0
     entry: list[int]
     exit: list[int]
-    output_file: str = "output_maze.txt"
+    output_file: str = "maze.txt"
     perfect: bool = True
     seed: str = "False"
     path: list[list[int]]
@@ -82,7 +82,7 @@ def get_config(filename: str) -> Config:
             for line in a:
                 line = line.strip()
 
-                if not line:
+                if not line or line.startswith("#"):
                     continue
 
                 key, value = line.split("=")
@@ -162,10 +162,11 @@ def get_config(filename: str) -> Config:
                 output_file=config.output_file,
                 perfect=config.perfect,
             )
-
         except ValidationError as err:
             for e in err.errors():
                 print(e["msg"])
+        except AttributeError as err:
+            print(err)
 
             sys.exit()
 
