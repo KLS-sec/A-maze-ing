@@ -133,6 +133,8 @@ def get_config(filename: str) -> Config:
                         raise ValueError(
                             "OUTPUT_FILE error, invalid name"
                         )
+                    else:
+                        Config.output_file = value
 
                 if key == "PERFECT":
                     if value == "True":

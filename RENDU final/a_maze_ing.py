@@ -115,7 +115,7 @@ def render(maze: list[list[generator.Cell]], height: int, width: int,
 
 
 def gen_maze(mazegen: MazeGenerator) -> list[list[generator.Cell]]:
-    """Return a generated and solved maze."""
+    """Generate and solve a maze."""
 
     map = mazegen.generate()
     maze = mazegen.solve(map)
@@ -124,7 +124,7 @@ def gen_maze(mazegen: MazeGenerator) -> list[list[generator.Cell]]:
 
 
 def coords_to_direction(path: list[list[int]]) -> str:
-    """Generate the solution path for the output file."""
+    """Generate the solution path."""
     directions = []
 
     for i in range(1, len(path)):
@@ -146,10 +146,10 @@ def coords_to_direction(path: list[list[int]]) -> str:
 def generate_output_file(filename: str, maze: list[list[generator.Cell]],
                          entry: list[int], exit: list[int],
                          solution_path: list[list[int]]) -> None:
-    """Generate the output file for the maze."""
+    """Generate the output file for the tester."""
     with open(filename, "w") as f:
         for row in maze:
-            # convert in hexa for each Cell in the row
+            # convert in hexa for Cell in the row
             line = "".join(cell.get_hexa() for cell in row)
             f.write(line + "\n")
         f.write(f"\n{entry[0]},{entry[1]}\n")

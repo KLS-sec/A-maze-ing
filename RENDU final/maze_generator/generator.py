@@ -432,9 +432,6 @@ def open_door(maze: list[list[Cell]],
     return directions
 
 
-# refaire de zero
-# faire un systeme avec une liste de sauvegarde, une liste en cours ´´´´´´´´´´´´´´´´´´´´´´´
-# d usage et une liste a rajouter?
 def imperfect_solver(maze: list[list[Cell]], data: Config) -> None:
     """Use the flood method to solve the imperfect maze.
 
@@ -513,7 +510,7 @@ def imperfect_solver(maze: list[list[Cell]], data: Config) -> None:
 
 
 class MazeGenerator:
-    """**** completer par mma"""
+    """Take Config data to generate/solve a maze"""
     def __init__(self, config: Config):
         self.config = config
 

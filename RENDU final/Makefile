@@ -16,7 +16,7 @@ debug:
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
-	rm -rf output_maze.txt
+	rm -rf maze.txt
 
 lint:
 	python3 -m flake8 .
