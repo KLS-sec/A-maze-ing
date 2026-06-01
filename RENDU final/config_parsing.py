@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, model_validator, ValidationError
 import re
 import sys
+import random
 
 
 class Config:
@@ -148,7 +149,7 @@ def get_config(filename: str) -> Config:
                     if value == "False":
                         config.seed = "False"
                     else:
-                        config.seed = value
+                        random.seed(value)
 
         try:
             tester = config_storage(

@@ -305,7 +305,7 @@ def atributor_exit(maze: list[list[Cell]], exit: list[int]) -> None:
 
 
 def fourtier(maze: list[list[Cell]], height: int, width: int) -> None:
-    """Create the 42 logo and check overlaping with entry and exit.
+    """Create the 42 logo and check overlaping with entry or exit.
 
     Use a list of str to atribute the if_ft status and draw the 42 logo in the
     middle of the maze.
@@ -521,10 +521,10 @@ class MazeGenerator:
         return maze_creator(self.config.height, self.config.width)
 
     def solve(self, genmaze: list[list[Cell]]) -> list[list[Cell]]:
-        if self.config.width > 11 and self.config.height > 9:
-            fourtier(genmaze, self.config.height, self.config.width)
         atributor_start(genmaze, self.config.entry)
         atributor_exit(genmaze, self.config.exit)
+        if self.config.width > 11 and self.config.height > 9:
+            fourtier(genmaze, self.config.height, self.config.width)
         wanderer(genmaze, self.config.entry, self.config)
         if not self.config.perfect:
             imperfect_maker(genmaze, self.config)

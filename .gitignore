@@ -1,5 +1,8 @@
 __pycache__
 .mypy_cache
 .venv
+.virtualenv
+.vscode
 maze_generator/__pycache__
 maze_generator/.mypy_cache
+output_maze.txt

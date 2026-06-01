@@ -68,9 +68,9 @@ def main() -> None:
     a = get_config("config.txt")
     a = a
     width = 12
-    height = 12
+    height = 10
     start = [1, 2]
-    exit = [9, 10]
+    exit = [5, 7]
 
     maze = maze_creator(height, width)
     fourtier(maze, height, width)
