@@ -352,16 +352,19 @@ def ariane_string(maze: list[list[Cell]], the_way: list[list[int]]) -> None:
 
 def random_repair(maze: list[list[Cell]], x: int, y: int) -> None:
     """Repair a random wall on the central cell to avoid 3x3 empty area."""
-    # **** Not unit tested
-    a = random.range(0, 4)
+    a = random.randrange(0, 3)
     if a == 0:
-        maze[y + 1][x + 1].north == 1
+        maze[y + 1][x + 1].north = 1
+        maze[y][x + 1].south = 1
     if a == 1:
-        maze[y + 1][x + 1].east == 1
+        maze[y + 1][x + 1].east = 1
+        maze[y + 1][x + 2].west = 1
     if a == 2:
-        maze[y + 1][x + 1].south == 1
+        maze[y + 1][x + 1].south = 1
+        maze[y + 2][x + 1].north = 1
     if a == 3:
-        maze[y + 1][x + 1].west == 1
+        maze[y + 1][x + 1].west = 1
+        maze[y + 1][x].east = 1
 
 
 # break the wall semi randomly to make it imperfect
@@ -418,19 +421,20 @@ def imperfect_maker(maze: list[list[Cell]],
                     chosen2: str = random.choice(directionss)
                     if random.randrange(0, 4) == 0:
                         wall_breaker(maze, x, y, chosen2)
-
+    print(type(maze[y][x].get_hexa()))
     # Add the security against 3x3 empty area.
-    for y in range(len(maze) - 2):
-        for x in range(len(maze[y] - 2)):
+    for y in range((len(maze)) - 2):
+        for x in range((len(maze[y]) - 2)):
             if (
-               (maze[y][x].get_hexa == 9) and (maze[y][x + 1].get_hexa == 1)
-               and (maze[y][x + 2].get_hexa == 3) and
-               (maze[y + 1][x].get_hexa == 8) and
-               (maze[y + 1][x + 1].get_hexa == 0) and
-               (maze[y + 1][x + 2].get_hexa == 2) and
-               (maze[y + 2][x].get_hexa == 12) and
-               (maze[y + 2][x + 1].get_hexa == 4) and
-               (maze[y + 2][x + 2].get_hexa == 6)
+               (maze[y][x].get_hexa() == "9") and
+               (maze[y][x + 1].get_hexa() == "1") and
+               (maze[y][x + 2].get_hexa() == "3") and
+               (maze[y + 1][x].get_hexa() == "8") and
+               (maze[y + 1][x + 1].get_hexa() == "0") and
+               (maze[y + 1][x + 2].get_hexa() == "2") and
+               (maze[y + 2][x].get_hexa() == "C") and
+               (maze[y + 2][x + 1].get_hexa() == "4") and
+               (maze[y + 2][x + 2].get_hexa() == "6")
                ):
                 random_repair(maze, x, y)
 
