@@ -6,8 +6,8 @@ import random
 
 class Config:
     """Store all the data about the maze to be easily reused everywhere."""
-    width: int = 0
-    height: int = 0
+    width: int
+    height: int
     entry: list[int]
     exit: list[int]
     output_file: str = "maze.txt"
@@ -162,15 +162,13 @@ def get_config(filename: str) -> Config:
                 output_file=config.output_file,
                 perfect=config.perfect,
             )
+            tester = tester
         except ValidationError as err:
             for e in err.errors():
                 print(e["msg"])
         except AttributeError as err:
             print(err)
-
             sys.exit()
-
-        tester = tester
 
     except FileNotFoundError:
         print("File not found")
